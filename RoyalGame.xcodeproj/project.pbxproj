@@ -1,0 +1,565 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		7631BF501EE1017E00CEA2D4 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7631BF4F1EE1017E00CEA2D4 /* Extensions.swift */; };
+		766226B41ECE24C100B32162 /* GameData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 766226B31ECE24C100B32162 /* GameData.swift */; };
+		766226B61ECE31E300B32162 /* Square.swift in Sources */ = {isa = PBXBuildFile; fileRef = 766226B51ECE31E300B32162 /* Square.swift */; };
+		767D52BC1EC7E4AA0029A49A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 767D52BB1EC7E4AA0029A49A /* AppDelegate.swift */; };
+		767D52C01EC7E4AA0029A49A /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 767D52BF1EC7E4AA0029A49A /* GameScene.swift */; };
+		767D52C21EC7E4AA0029A49A /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 767D52C11EC7E4AA0029A49A /* GameViewController.swift */; };
+		767D52C51EC7E4AA0029A49A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 767D52C31EC7E4AA0029A49A /* Main.storyboard */; };
+		767D52C71EC7E4AA0029A49A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 767D52C61EC7E4AA0029A49A /* Assets.xcassets */; };
+		767D52CA1EC7E4AA0029A49A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 767D52C81EC7E4AA0029A49A /* LaunchScreen.storyboard */; };
+		767D52D51EC7E4AA0029A49A /* RoyalGameTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 767D52D41EC7E4AA0029A49A /* RoyalGameTests.swift */; };
+		767D52E01EC7E4AB0029A49A /* RoyalGameUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 767D52DF1EC7E4AB0029A49A /* RoyalGameUITests.swift */; };
+		768A21641EE7852300CF92E8 /* Sound in Resources */ = {isa = PBXBuildFile; fileRef = 768A21631EE7852300CF92E8 /* Sound */; };
+		76A841B91ECB979800D0B591 /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76A841B81ECB979800D0B591 /* Token.swift */; };
+		76D220C91ED41B2F00B28BAF /* Move.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76D220C81ED41B2F00B28BAF /* Move.swift */; };
+		76D220D01ED639AB00B28BAF /* Sprites.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 76D220CF1ED639AB00B28BAF /* Sprites.xcassets */; };
+		76E280BD1EDD0550003CA5F0 /* WinScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76E280BC1EDD0550003CA5F0 /* WinScene.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		767D52D11EC7E4AA0029A49A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 767D52B01EC7E4AA0029A49A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 767D52B71EC7E4AA0029A49A;
+			remoteInfo = RoyalGame;
+		};
+		767D52DC1EC7E4AB0029A49A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 767D52B01EC7E4AA0029A49A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 767D52B71EC7E4AA0029A49A;
+			remoteInfo = RoyalGame;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		7631BF4F1EE1017E00CEA2D4 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		766226B31ECE24C100B32162 /* GameData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameData.swift; sourceTree = "<group>"; };
+		766226B51ECE31E300B32162 /* Square.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Square.swift; sourceTree = "<group>"; };
+		767D52B81EC7E4AA0029A49A /* RoyalGame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RoyalGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		767D52BB1EC7E4AA0029A49A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		767D52BF1EC7E4AA0029A49A /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
+		767D52C11EC7E4AA0029A49A /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
+		767D52C41EC7E4AA0029A49A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		767D52C61EC7E4AA0029A49A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		767D52C91EC7E4AA0029A49A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		767D52CB1EC7E4AA0029A49A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		767D52D01EC7E4AA0029A49A /* RoyalGameTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RoyalGameTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		767D52D41EC7E4AA0029A49A /* RoyalGameTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoyalGameTests.swift; sourceTree = "<group>"; };
+		767D52D61EC7E4AA0029A49A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		767D52DB1EC7E4AB0029A49A /* RoyalGameUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RoyalGameUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		767D52DF1EC7E4AB0029A49A /* RoyalGameUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoyalGameUITests.swift; sourceTree = "<group>"; };
+		767D52E11EC7E4AB0029A49A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		768A21631EE7852300CF92E8 /* Sound */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Sound; sourceTree = "<group>"; };
+		76A841B81ECB979800D0B591 /* Token.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Token.swift; sourceTree = "<group>"; };
+		76D220C81ED41B2F00B28BAF /* Move.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Move.swift; sourceTree = "<group>"; };
+		76D220CF1ED639AB00B28BAF /* Sprites.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Sprites.xcassets; sourceTree = "<group>"; };
+		76E280BC1EDD0550003CA5F0 /* WinScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WinScene.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		767D52B51EC7E4AA0029A49A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		767D52CD1EC7E4AA0029A49A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		767D52D81EC7E4AB0029A49A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		767D52AF1EC7E4AA0029A49A = {
+			isa = PBXGroup;
+			children = (
+				767D52BA1EC7E4AA0029A49A /* RoyalGame */,
+				767D52D31EC7E4AA0029A49A /* RoyalGameTests */,
+				767D52DE1EC7E4AB0029A49A /* RoyalGameUITests */,
+				767D52B91EC7E4AA0029A49A /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		767D52B91EC7E4AA0029A49A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				767D52B81EC7E4AA0029A49A /* RoyalGame.app */,
+				767D52D01EC7E4AA0029A49A /* RoyalGameTests.xctest */,
+				767D52DB1EC7E4AB0029A49A /* RoyalGameUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		767D52BA1EC7E4AA0029A49A /* RoyalGame */ = {
+			isa = PBXGroup;
+			children = (
+				76D220CF1ED639AB00B28BAF /* Sprites.xcassets */,
+				767D52BB1EC7E4AA0029A49A /* AppDelegate.swift */,
+				767D52BF1EC7E4AA0029A49A /* GameScene.swift */,
+				7631BF4F1EE1017E00CEA2D4 /* Extensions.swift */,
+				76E280BC1EDD0550003CA5F0 /* WinScene.swift */,
+				76D220C81ED41B2F00B28BAF /* Move.swift */,
+				766226B51ECE31E300B32162 /* Square.swift */,
+				766226B31ECE24C100B32162 /* GameData.swift */,
+				76A841B81ECB979800D0B591 /* Token.swift */,
+				767D52C11EC7E4AA0029A49A /* GameViewController.swift */,
+				767D52C31EC7E4AA0029A49A /* Main.storyboard */,
+				768A21631EE7852300CF92E8 /* Sound */,
+				767D52C61EC7E4AA0029A49A /* Assets.xcassets */,
+				767D52C81EC7E4AA0029A49A /* LaunchScreen.storyboard */,
+				767D52CB1EC7E4AA0029A49A /* Info.plist */,
+			);
+			path = RoyalGame;
+			sourceTree = "<group>";
+		};
+		767D52D31EC7E4AA0029A49A /* RoyalGameTests */ = {
+			isa = PBXGroup;
+			children = (
+				767D52D41EC7E4AA0029A49A /* RoyalGameTests.swift */,
+				767D52D61EC7E4AA0029A49A /* Info.plist */,
+			);
+			path = RoyalGameTests;
+			sourceTree = "<group>";
+		};
+		767D52DE1EC7E4AB0029A49A /* RoyalGameUITests */ = {
+			isa = PBXGroup;
+			children = (
+				767D52DF1EC7E4AB0029A49A /* RoyalGameUITests.swift */,
+				767D52E11EC7E4AB0029A49A /* Info.plist */,
+			);
+			path = RoyalGameUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		767D52B71EC7E4AA0029A49A /* RoyalGame */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 767D52E41EC7E4AB0029A49A /* Build configuration list for PBXNativeTarget "RoyalGame" */;
+			buildPhases = (
+				767D52B41EC7E4AA0029A49A /* Sources */,
+				767D52B51EC7E4AA0029A49A /* Frameworks */,
+				767D52B61EC7E4AA0029A49A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = RoyalGame;
+			productName = RoyalGame;
+			productReference = 767D52B81EC7E4AA0029A49A /* RoyalGame.app */;
+			productType = "com.apple.product-type.application";
+		};
+		767D52CF1EC7E4AA0029A49A /* RoyalGameTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 767D52E71EC7E4AB0029A49A /* Build configuration list for PBXNativeTarget "RoyalGameTests" */;
+			buildPhases = (
+				767D52CC1EC7E4AA0029A49A /* Sources */,
+				767D52CD1EC7E4AA0029A49A /* Frameworks */,
+				767D52CE1EC7E4AA0029A49A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				767D52D21EC7E4AA0029A49A /* PBXTargetDependency */,
+			);
+			name = RoyalGameTests;
+			productName = RoyalGameTests;
+			productReference = 767D52D01EC7E4AA0029A49A /* RoyalGameTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		767D52DA1EC7E4AB0029A49A /* RoyalGameUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 767D52EA1EC7E4AB0029A49A /* Build configuration list for PBXNativeTarget "RoyalGameUITests" */;
+			buildPhases = (
+				767D52D71EC7E4AB0029A49A /* Sources */,
+				767D52D81EC7E4AB0029A49A /* Frameworks */,
+				767D52D91EC7E4AB0029A49A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				767D52DD1EC7E4AB0029A49A /* PBXTargetDependency */,
+			);
+			name = RoyalGameUITests;
+			productName = RoyalGameUITests;
+			productReference = 767D52DB1EC7E4AB0029A49A /* RoyalGameUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		767D52B01EC7E4AA0029A49A /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0700;
+				ORGANIZATIONNAME = "Mikkel Wilson";
+				TargetAttributes = {
+					767D52B71EC7E4AA0029A49A = {
+						CreatedOnToolsVersion = 7.0.1;
+						DevelopmentTeam = 7SSMF45RMH;
+						LastSwiftMigration = 0830;
+					};
+					767D52CF1EC7E4AA0029A49A = {
+						CreatedOnToolsVersion = 7.0.1;
+						LastSwiftMigration = 0830;
+						TestTargetID = 767D52B71EC7E4AA0029A49A;
+					};
+					767D52DA1EC7E4AB0029A49A = {
+						CreatedOnToolsVersion = 7.0.1;
+						LastSwiftMigration = 0830;
+						TestTargetID = 767D52B71EC7E4AA0029A49A;
+					};
+				};
+			};
+			buildConfigurationList = 767D52B31EC7E4AA0029A49A /* Build configuration list for PBXProject "RoyalGame" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 767D52AF1EC7E4AA0029A49A;
+			productRefGroup = 767D52B91EC7E4AA0029A49A /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				767D52B71EC7E4AA0029A49A /* RoyalGame */,
+				767D52CF1EC7E4AA0029A49A /* RoyalGameTests */,
+				767D52DA1EC7E4AB0029A49A /* RoyalGameUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		767D52B61EC7E4AA0029A49A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				767D52CA1EC7E4AA0029A49A /* LaunchScreen.storyboard in Resources */,
+				767D52C71EC7E4AA0029A49A /* Assets.xcassets in Resources */,
+				768A21641EE7852300CF92E8 /* Sound in Resources */,
+				76D220D01ED639AB00B28BAF /* Sprites.xcassets in Resources */,
+				767D52C51EC7E4AA0029A49A /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		767D52CE1EC7E4AA0029A49A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		767D52D91EC7E4AB0029A49A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		767D52B41EC7E4AA0029A49A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				76D220C91ED41B2F00B28BAF /* Move.swift in Sources */,
+				7631BF501EE1017E00CEA2D4 /* Extensions.swift in Sources */,
+				766226B61ECE31E300B32162 /* Square.swift in Sources */,
+				767D52C01EC7E4AA0029A49A /* GameScene.swift in Sources */,
+				766226B41ECE24C100B32162 /* GameData.swift in Sources */,
+				767D52C21EC7E4AA0029A49A /* GameViewController.swift in Sources */,
+				76E280BD1EDD0550003CA5F0 /* WinScene.swift in Sources */,
+				767D52BC1EC7E4AA0029A49A /* AppDelegate.swift in Sources */,
+				76A841B91ECB979800D0B591 /* Token.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		767D52CC1EC7E4AA0029A49A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				767D52D51EC7E4AA0029A49A /* RoyalGameTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		767D52D71EC7E4AB0029A49A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				767D52E01EC7E4AB0029A49A /* RoyalGameUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		767D52D21EC7E4AA0029A49A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 767D52B71EC7E4AA0029A49A /* RoyalGame */;
+			targetProxy = 767D52D11EC7E4AA0029A49A /* PBXContainerItemProxy */;
+		};
+		767D52DD1EC7E4AB0029A49A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 767D52B71EC7E4AA0029A49A /* RoyalGame */;
+			targetProxy = 767D52DC1EC7E4AB0029A49A /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		767D52C31EC7E4AA0029A49A /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				767D52C41EC7E4AA0029A49A /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		767D52C81EC7E4AA0029A49A /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				767D52C91EC7E4AA0029A49A /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		767D52E21EC7E4AB0029A49A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		767D52E31EC7E4AB0029A49A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		767D52E51EC7E4AB0029A49A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = 7SSMF45RMH;
+				INFOPLIST_FILE = RoyalGame/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = mrpw.RoyalGame;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = 2;
+			};
+			name = Debug;
+		};
+		767D52E61EC7E4AB0029A49A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = 7SSMF45RMH;
+				INFOPLIST_FILE = RoyalGame/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = mrpw.RoyalGame;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = 2;
+			};
+			name = Release;
+		};
+		767D52E81EC7E4AB0029A49A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				INFOPLIST_FILE = RoyalGameTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = mrpw.RoyalGameTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/RoyalGame.app/RoyalGame";
+			};
+			name = Debug;
+		};
+		767D52E91EC7E4AB0029A49A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = RoyalGameTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = mrpw.RoyalGameTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/RoyalGame.app/RoyalGame";
+			};
+			name = Release;
+		};
+		767D52EB1EC7E4AB0029A49A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				INFOPLIST_FILE = RoyalGameUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = mrpw.RoyalGameUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+				TEST_TARGET_NAME = RoyalGame;
+				USES_XCTRUNNER = YES;
+			};
+			name = Debug;
+		};
+		767D52EC1EC7E4AB0029A49A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = RoyalGameUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = mrpw.RoyalGameUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+				TEST_TARGET_NAME = RoyalGame;
+				USES_XCTRUNNER = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		767D52B31EC7E4AA0029A49A /* Build configuration list for PBXProject "RoyalGame" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				767D52E21EC7E4AB0029A49A /* Debug */,
+				767D52E31EC7E4AB0029A49A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		767D52E41EC7E4AB0029A49A /* Build configuration list for PBXNativeTarget "RoyalGame" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				767D52E51EC7E4AB0029A49A /* Debug */,
+				767D52E61EC7E4AB0029A49A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		767D52E71EC7E4AB0029A49A /* Build configuration list for PBXNativeTarget "RoyalGameTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				767D52E81EC7E4AB0029A49A /* Debug */,
+				767D52E91EC7E4AB0029A49A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		767D52EA1EC7E4AB0029A49A /* Build configuration list for PBXNativeTarget "RoyalGameUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				767D52EB1EC7E4AB0029A49A /* Debug */,
+				767D52EC1EC7E4AB0029A49A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 767D52B01EC7E4AA0029A49A /* Project object */;
+}

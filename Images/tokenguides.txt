@@ -1,0 +1,4 @@
+Guides:
+09, 91 - Edge of token
+40, 60 - Endpoints for bezier curves
+33, 67 - Stock token bezier endpoints
