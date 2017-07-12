@@ -8,30 +8,13 @@
 
 import SpriteKit
 
-enum TokenType: Int, CustomStringConvertible {
-    case unknown = 0, general, peasant, priest, dancer, siege, knight, jester
-    
-    var description: String {
-        switch self {
-        case .general: return "1"
-        case .peasant: return "2"
-        case .priest: return "3"
-        case .dancer: return "4"
-        case .siege: return "5"
-        case .knight: return "6"
-        case .jester: return "7"
-        default: return "Unknown"
-        }
-    }
-}
-
 class Token: CustomStringConvertible, Hashable {
     var position: Int
     let player: Int
-    let tokenType: TokenType
+    let tokenType: Int
     var sprite: SKSpriteNode?
     
-    init(pos: Int, player: Int, type: TokenType = .unknown){
+    init(pos: Int, player: Int, type: Int = 0){
         position = pos
         self.player = player
         tokenType = type
@@ -47,11 +30,15 @@ class Token: CustomStringConvertible, Hashable {
     
     var spriteName: String {
         switch tokenType {
-        case .peasant: return "token P\(player) peasant"
-        case .general: return "token P\(player) star"
-        case .priest: return "token P\(player) cross"
-        case .jester: return "token P\(player) hex"
-        case .dancer: return "token P\(player) wave"
+        case 1: return "token P\(player) peasant"
+        case 2: return "token P\(player) star"
+        case 3: return "token P\(player) cross"
+        case 4: return "token P\(player) hex"
+        case 5: return "token P\(player) wave"
+        case 6: return "token P\(player) hacker"
+        case 7: return "token P\(player) glider"
+        case 8: return "token P\(player) octostar"
+        case 9: return "token P\(player) yin"
         default: return "token P\(player)"
         }
     }

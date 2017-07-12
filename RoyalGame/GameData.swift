@@ -21,7 +21,7 @@ class GameData {
     var diceState = [false, false, false, false]
     var gameOver = false
     //var availableTypes = [[TokenType]](repeating: [.general, .peasant, .priest, .dancer, .siege, .knight, .jester], count: 2)
-    var availableTypes = [Set<TokenType>](repeating: [.general, .peasant, .priest, .dancer, .siege, .knight, .jester], count: 2)
+    var availableTypes = [[Int]](repeating: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], count: 2)
     let rosettes = [4, 9, 14]
     var moveNum = 0
     var addMove: Move?
@@ -48,7 +48,7 @@ class GameData {
                         createToken(at: pos, player: activePlayer)
                         tokenStock[activePlayer-1]-=1 // Take the token out of the player's stock
                     case .capture:
-                        availableTypes[2-activePlayer].insert(tokenAt(at: pos + jump, side: 2 - activePlayer)!.tokenType)
+                        availableTypes[2-activePlayer].append(tokenAt(at: pos + jump, side: 2 - activePlayer)!.tokenType)
                         removeToken(at: pos + jump, player: activePlayer^3) // Remove a token that belongs to the other player at the new position
                         tokenAt(at: pos, side: side)!.position += jump
                         tokenStock[2-activePlayer]+=1 // Add the token back to the other player's stock
@@ -140,21 +140,25 @@ class GameData {
     }
     
     func createToken(at pos: Int, player: Int) {
+        /*
         var tokenType: TokenType!
         repeat {
             let tokenNum = arc4random_uniform(7)
             switch tokenNum {
-            case 0: tokenType = .general
-            case 1: tokenType = .peasant
+            case 0: tokenType = 1
+            case 1: tokenType = 2
             case 2: tokenType = .priest
             case 3: tokenType = .dancer
             case 4: tokenType = .siege
             case 5: tokenType = .knight
             case 6: tokenType = .jester
-            default: fatalError("createToken() random error") //tokenType = .unknown
+            default: tokenType = 0
             }
         } while (!availableTypes[player-1].contains(tokenType))
-        availableTypes[player-1].remove(tokenType)
+        */
+        let tokenNum = arc4random_uniform(UInt32(availableTypes[player-1].count))
+        let tokenType = availableTypes[player-1][Int(tokenNum)]
+        availableTypes[player-1].remove(at: Int(tokenNum))
         let token = Token(pos: pos, player: player, type: tokenType)
         tokens.append(token)
     }
@@ -265,7 +269,7 @@ class GameData {
                 scene.removeToken(token)
             }
         }
-        availableTypes = [Set<TokenType>](repeating: [.general, .peasant, .priest, .dancer, .siege, .knight, .jester], count: 2)
+        availableTypes = [[Int]](repeating: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], count: 2)
         moveNum = 0
         gameOver = false
         activePlayer = 1
