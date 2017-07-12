@@ -195,20 +195,24 @@ class GameScene: SKScene {
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         if let beginPos = touchBeginPos{
-            let rank = activeSquare!.0
-            let side = activeSquare!.1
-            let touch = touches.first!
-            let touchPos = touch.location(in: self)
-            let distx = touchPos.x - beginPos.x
-            let disty = touchPos.y - beginPos.y
-            if let sprite = data.tokenAt(at: rank, side: side)?.sprite {
-                let coord = coordForTile(at: rank, side: side)
-                sprite.position = CGPoint(x: coord.x + distx, y: coord.y + disty)
-            }
-            if (Float(distx) ^^ 2 + Float(disty) ^^ 2) > 600 {
-                self.data.executeMove(at: rank, side: side)
-                touchBeginPos = nil
-                activeSquare = nil
+            if activeSquare != nil {
+                let rank = activeSquare!.0
+                let side = activeSquare!.1
+                let touch = touches.first!
+                let touchPos = touch.location(in: self)
+                let distx = touchPos.x - beginPos.x
+                let disty = touchPos.y - beginPos.y
+                if let sprite = data.tokenAt(at: rank, side: side)?.sprite {
+                    let coord = coordForTile(at: rank, side: side)
+                    sprite.position = CGPoint(x: coord.x + distx, y: coord.y + disty)
+                }
+                if (Float(distx) ^^ 2 + Float(disty) ^^ 2) > 600 {
+                    self.data.executeMove(at: rank, side: side)
+                    touchBeginPos = nil
+                    activeSquare = nil
+                }
+            } else {
+                // Do nothing
             }
         }
     }
