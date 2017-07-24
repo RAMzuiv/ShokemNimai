@@ -13,7 +13,7 @@ class Square: SKSpriteNode {
     var number: Int // 1-4 for either player's home row, 5-12 for middle lane, 13-14 for each player's final strech
     var playerSide: Int // -1 for P1, 0 for middle of board, 1 for P2
     //let touchEvent: ((Int, Int, UITouch) -> ())!
-    let gameScene: GameScene!
+    let gameScene: GeneralScene!
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?){
         //touchEvent(number, playerSide, touches.first!)
@@ -29,7 +29,7 @@ class Square: SKSpriteNode {
         gameScene.touchesEnded(touches, with: event)
     }
     
-    init(scene: GameScene, size: CGSize, at pos: Int, side: Int/*, touchEvent: @escaping (_ rank: Int, _ side: Int, _ touch: UITouch) -> ()*/){
+    init(scene: GeneralScene, size: CGSize, at pos: Int, side: Int/*, touchEvent: @escaping (_ rank: Int, _ side: Int, _ touch: UITouch) -> ()*/){
         let color = SKColor(red: 0, green: 0, blue: 0, alpha: 0) //Transparent
         self.number = pos
         self.playerSide = side

@@ -7,62 +7,32 @@
 //
 
 import SpriteKit
+import AVFoundation
 
-class GameScene: SKScene {
+class GameScene: GeneralScene {
     let data: GameData!
-    var board: Set<SKSpriteNode>!
-    var touchBeginPos: CGPoint? // The beginning of a touch
-    var activeSquare: (Int, Int)? // Rank and side of the active square
-    
-    let PColour = [SKColor(1, 0, 0), SKColor(0, 0.95, 0)] // Main Colours for both players
-    let PTileColour = [SKColor(1, 0.93, 0.95), SKColor(0.9, 1, 0.93)] // Tile colours for both players
-    //let PTileColour = [SKColor(0.75, 0.75, 0.75), SKColor(0.75, 0.75, 0.75)] // Tile colours for both players
-    let PDiceOffColour = [SKColor(0.2, 0, 0), SKColor(0, 0.2, 0)] // Colour for the off dice
-    let PDiceColour = [SKColor(0.45, 0.1, 0.1), SKColor(0.1, 0.4, 0.1)] // Colour for the dice box
-    let PDiceOnColour = [SKColor(1, 0.1, 0.1), SKColor(0.3, 0.95, 0.3)] // Colour for the on dice
-    let BGColour = SKColor(0.53, 0.81, 0.92) // Background colour
-    //let BGColour = SKColor(0.3, 0.3, 0.3) // Background colour
-    //let StrokeColour: SKColor = SKColor(0, 0.44, 1) // Stroke colour for tiles on board
-    let StrokeColour: SKColor = SKColor(0, 0.4, 0.8) // Stroke colour for tiles on board
-    let TileColour = SKColor(1, 1, 1)
-    //let TileColour = SKColor(0.75, 0.75, 0.75)
-    let scrSize: CGSize?
-    let TileSize: CGFloat?
-    let vertGap: CGFloat!
-    let horzShift: CGFloat!
-    let vertShift: CGFloat!
     let dice: SKSpriteNode
     let dieSize: CGFloat?
-    let addIndicator: SKSpriteNode // The indicator to show when an add move is allowed
-    let oldIdealTileSize = 114.0 as CGFloat // The ideal size relative to the 9.7 iPad. Don't use this number
-    let idealTileSize = 152.0 as CGFloat // The ideal size relative to the 12.9. Make assets at 2x the resolution of the 12.9
-    var diceValues = [false, false, false, false]
-    var stockBoxes: (SKSpriteNode?, SKSpriteNode?)
-    let errorSound = SKAction.playSoundFileNamed("Sound/error", waitForCompletion: false)
-    let thunder = SKTexture(imageNamed: "Thunder")
-    let hex = SKTexture(imageNamed: "Hex")
-    let sqRosetta = SKTexture(imageNamed: "squareRosetta")
     
     required init(coder: NSCoder) {
         fatalError("coder is not used in this app")
     }
     
     init(size: CGSize, data: GameData) {
-        //StrokeColour = BGColour
         self.data = data
-        self.scrSize = size
-        self.TileSize = size.width/9
-        vertGap = TileSize!/4
-        horzShift = TileSize!
-        vertShift = TileSize!+vertGap
-        dieSize = TileSize!*3/4
+        let tSize = size.width/9
+        dieSize = tSize*3/4
         
         // Create the dice sprites
+        dice = SKSpriteNode(color: SKColor.black, size: CGSize(width: dieSize!+1, height: dieSize!+1))
+        
+        super.init(size: size)
+        
+        // Add the dice
         let diceColour: SKColor
         diceColour = PColour[data.activePlayer-1]
         let inRect = SKSpriteNode(color: diceColour, size: CGSize(width: dieSize!-1, height: dieSize!-1))
         inRect.name = "Dice In Rect"
-        dice = SKSpriteNode(color: SKColor.black, size: CGSize(width: dieSize!+1, height: dieSize!+1))
         inRect.position = CGPoint(x: 0, y: 0)
         dice.position = CGPoint(x: 3*horzShift, y: -2*vertShift)
         inRect.zPosition = 10
@@ -82,55 +52,7 @@ class GameScene: SKScene {
             }
         }
         
-        // Create the Add Indicator
-        addIndicator = SKSpriteNode(imageNamed: "token P1")
-        addIndicator.setScale(1/4 * TileSize!/oldIdealTileSize)
-        addIndicator.zPosition = 11
-        addIndicator.alpha = 0
-        
-        super.init(size: size)
-        
-        anchorPoint = CGPoint(x: 0.5, y: 0.5)
-        
-        self.backgroundColor = BGColour // Set the background to the background colour
-        
-        // Add the background
-        let background = SKSpriteNode(imageNamed: "background")
-        background.scale(to: self.scrSize!)
-        background.zPosition = -1
-        self.addChild(background)
-        
-        // Add the tiles to the board
-        for side in [1, 2]{
-            for rank in (1...4) {
-                addTile(at: rank, side: side, bigTile: rank==4)
-            }
-            for rank in [13, 14] {
-                addTile(at: rank, side: side, bigTile: rank==13)
-            }
-        }
-        for rank in (5...12) {
-            addTile(at: rank, side: 0, bigTile: (rank==12)||(rank==5))
-        }
-        
-        
         // Add the rosettes
-        /*
-        for rosette in data.rosettes {
-            if 13 <= rosette || rosette <= 4 {
-                for side in [1,2] {
-                    sprite = SKSpriteNode(texture: thunder)
-                    sprite.position = coordForTile(at: rosette, side: side)
-                    //sprite.size = CGSize(width: TileSize!*0.8, height: TileSize!*0.8)
-                    sprite.zRotation = -.pi * (3 / 24)
-                }
-            } else {
-                sprite = SKSpriteNode(texture: hex)
-                sprite.position = coordForTile(at: rosette, side: 0)
-                //sprite.size = CGSize(width: TileSize!*0.8, height: TileSize!*0.8)
-            }
-        }
-        */
         for rosette in data.rosettes {
             if 13 <= rosette || rosette <= 4 {
                 for side in [1,2] {
@@ -141,41 +63,6 @@ class GameScene: SKScene {
             }
         }
         
-        // Add the stock counters
-        for player in [1,2] {
-            let SBSize = (TileSize!*3, TileSize!*1)
-            let stockBoxIn = SKSpriteNode(color: TileColour, size: CGSize(width: SBSize.0 - 1, height: SBSize.1 - 1))
-            let stockBox = SKSpriteNode(color: StrokeColour, size: CGSize(width: SBSize.0 + 1, height: SBSize.1 + 1))
-            stockBox.addChild(stockBoxIn)
-            stockBoxIn.zPosition = 10
-            stockBoxIn.name = "Stock Box"
-            stockBox.zPosition = 9
-            stockBox.position = CGPoint(x: -2*TileSize!, y: 2.5*TileSize!*CGFloat(player*2-3))
-            self.addChild(stockBox)
-            //let playerColour = PColour[player-1]
-            let tokenSize = SBSize.0*3/32
-            for i in 0..<7 {
-                //let spriteIn = SKSpriteNode(color: playerColour, size: CGSize(width: tokenSize - 1, height: tokenSize - 1))
-                //let sprite = SKSpriteNode(color: UIColor.black, size: CGSize(width: tokenSize + 1, height: tokenSize + 1))
-                //let sprite = SKShapeNode(rectOf: CGSize(width: tokenSize + 1, height: tokenSize + 1), cornerRadius: 5)
-                //sprite.fillColor = playerColour
-                //sprite.strokeColor = UIColor.black
-                //spriteIn.zPosition = 13
-                let sprite = SKSpriteNode(imageNamed: "Stock Tkn P\(player)")
-                sprite.setScale(1/2 * TileSize!/oldIdealTileSize)
-                sprite.zPosition = 11
-                sprite.name = "Stock P\(player) #\(i)"
-                //sprite.addChild(spriteIn)
-                stockBox.addChild(sprite)
-                sprite.position = CGPoint(x: CGFloat(i-3)*tokenSize*(17/12), y: 0.0)
-            }
-            switch player {
-            case 1: stockBoxes.0 = stockBox
-            case 2: stockBoxes.1 = stockBox
-            default: ()
-            }
-        }
-        self.addChild(addIndicator)
         self.addChild(dice)
     }
     
@@ -187,7 +74,7 @@ class GameScene: SKScene {
             if name == "Dice In Rect" || name.contains("Die"){
                 invalidMove()
             }
-            if name == "Stock Box" {
+            if name == "Stock Box" || name.contains("Stock"){
                 invalidMove()
             }
         }
@@ -228,7 +115,19 @@ class GameScene: SKScene {
         activeSquare = nil
     }
     
-    func onSquareTouch(at rank: Int, side: Int, touch: UITouch) {
+    func addRosette(rank: Int, side: Int) {
+        let sprite = SKSpriteNode(texture: sqRosetta)
+        sprite.position = coordForTile(at: rank, side: side)
+        //sprite.setScale(2/3 * TileSize!/oldIdealTileSize) //Use this for the old rosettas
+        sprite.setScale(1/2 * TileSize!/oldIdealTileSize)
+        sprite.zPosition = 13
+        if side == 0 {
+            sprite.name = "Center Rosette"
+        }
+        self.addChild(sprite)
+    }
+    
+    override func onSquareTouch(at rank: Int, side: Int, touch: UITouch) {
         //self.data.touch(at: rank, side: side)
         if let moveType = data.typeForMove(at: rank, side: side) {
             if moveType == .add {
@@ -238,41 +137,6 @@ class GameScene: SKScene {
                 activeSquare = (rank, side)
             }
         }
-    }
-    
-    func addRosette(rank: Int, side: Int) {
-        let sprite: SKSpriteNode!
-        if 13 <= rank || rank <= 4 {
-            sprite = SKSpriteNode(texture: sqRosetta)
-            //sprite = SKSpriteNode(texture: hex)
-            //sprite.zRotation = -.pi * (3 / 24)
-        } else {
-            sprite = SKSpriteNode(texture: sqRosetta)
-        }
-        sprite.position = coordForTile(at: rank, side: side)
-        //sprite.setScale(2/3 * TileSize!/oldIdealTileSize) //Use this for the old rosettas
-        sprite.setScale(1 * TileSize!/oldIdealTileSize)
-        sprite.zPosition = 13
-        self.addChild(sprite)
-    }
-    
-    /*
-    override func update(_ currentTime: TimeInterval) {
-        for i in 0 ..< diceValues.count {
-            if arc4random_uniform(10) > 2{
-                diceValues[i] = !diceValues[i]
-                var state = 0
-                if diceValues[i] == true {
-                    state = 1
-                }
-                setDieColor(die: i, state: state)
-            }
-        }
-    }
-    */
-    
-    func removeToken(_ token: Token) {
-        token.sprite?.run(SKAction.removeFromParent())
     }
     
     func setDieColor(die dieNum: Int, state: Int) { // State 0 is off, 1 is on during rolling, 2 is on normally
@@ -293,11 +157,7 @@ class GameScene: SKScene {
         die.strokeColor = colour
     }
     
-    func invalidMove() {
-        run(errorSound)
-    }
-    
-    func updateScreen() {
+    override func updateScreen() {
         let player = data.activePlayer
         // Change the colour of the dice to the appropriate colour
         let diceColour = PDiceColour[player-1]
@@ -335,6 +195,17 @@ class GameScene: SKScene {
             addIndicator.position = coord
         } else {
             addIndicator.alpha = 0
+        }
+        
+        // Update the rosette
+        let rosette = self.childNode(withName: "Center Rosette")! as! SKSpriteNode
+        let rTimer = data.rosetteTimer
+        if rTimer == 0 {
+            rosette.texture = SKTexture(imageNamed: "squareRosetta")
+        } else if rTimer >= 10 {
+            rosette.texture = SKTexture(imageNamed: "RosettaEmpty")
+        } else {
+            rosette.texture = SKTexture(imageNamed: "RoseT\(rTimer)")
         }
         
         // Update the tokens
@@ -378,28 +249,7 @@ class GameScene: SKScene {
         }
     }
     
-    func coordForTile(at rank: Int, side: Int) -> CGPoint {
-        var x: Int!
-        var y = 0
-        if side == 1{
-            y = -1
-        } else if side == 2 {
-            y = 1
-        }
-        if y == 0 || (rank > 4 && rank < 13) {
-            x = rank-9 // In middle of board
-            y = 0
-        } else {
-            if rank <= 4{
-                x = -rank // In home row
-            } else {
-                x = 16-rank // In final stretch
-            }
-        }
-        return CGPoint(x: (CGFloat(x)+1/2)*horzShift, y: CGFloat(y)*vertShift)
-    }
-    
-    func addTile(at rank: Int, side: Int, bigTile: Bool = false, withButton: Bool = true) {
+    override func addTile(at rank: Int, side: Int, bigTile: Bool = false, withButton: Bool = true) {
         var tileColour = TileColour
         if side != 0 {
             tileColour = PTileColour[side-1] // Make the square the player's colour
@@ -407,10 +257,10 @@ class GameScene: SKScene {
         let coords = coordForTile(at: rank, side: side)
         if withButton{
             let button = Square(scene: self, size: CGSize(width: TileSize!-1, height: TileSize!-1), at: rank, side: side)/*{
-                (rank: Int, side: Int, touch: UITouch) -> () in
-                //self.data.touch(at: rank, side: side)
-                self.onSquareTouch(at: rank, side: side, touch: touch)
-            } */
+             (rank: Int, side: Int, touch: UITouch) -> () in
+             //self.data.touch(at: rank, side: side)
+             self.onSquareTouch(at: rank, side: side, touch: touch)
+             } */
             button.data = data //Give the square access to the data model
             button.isUserInteractionEnabled = true
             button.zPosition = 30
@@ -459,35 +309,6 @@ class GameScene: SKScene {
         outRect.zPosition = 9
         self.addChild(inRect)
         self.addChild(outRect)
-    }
-    
-    func squircle(size: CGFloat) -> SKShapeNode {
-        let radius = size/2
-        
-        let bezierPath = UIBezierPath()
-        
-        // The corners (Guide points for curve)
-        let ULCorner = CGPoint(x: -radius, y: +radius)
-        let DLCorner = CGPoint(x: -radius, y: -radius)
-        let URCorner = CGPoint(x: +radius, y: +radius)
-        let DRCorner = CGPoint(x: +radius, y: -radius)
-        
-        // The edge midpoints (Start-end points for curve)
-        let LeftPoint = CGPoint(x: -radius, y: 0)
-        let RightPoint = CGPoint(x: radius, y: 0)
-        let UpPoint = CGPoint(x: 0, y: radius)
-        let DownPoint = CGPoint(x: 0, y: -radius)
-        
-        bezierPath.move(to: LeftPoint)
-        bezierPath.addCurve(to: UpPoint, controlPoint1: ULCorner, controlPoint2: ULCorner)
-        bezierPath.addCurve(to: RightPoint, controlPoint1: URCorner, controlPoint2: URCorner)
-        bezierPath.addCurve(to: DownPoint, controlPoint1: DRCorner, controlPoint2: DRCorner)
-        bezierPath.addCurve(to: LeftPoint, controlPoint1: DLCorner, controlPoint2: DLCorner)
-        bezierPath.close()
-        
-        let shape = SKShapeNode(path: bezierPath.cgPath)
-        //shape.
-        return shape
     }
 }
 

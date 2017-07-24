@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		7631BF501EE1017E00CEA2D4 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7631BF4F1EE1017E00CEA2D4 /* Extensions.swift */; };
+		763D28DA1F1EDDE00004D629 /* TutorialScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 763D28D91F1EDDE00004D629 /* TutorialScene.swift */; };
+		763D28DC1F1EE16E0004D629 /* GeneralScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 763D28DB1F1EE16E0004D629 /* GeneralScene.swift */; };
 		766226B41ECE24C100B32162 /* GameData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 766226B31ECE24C100B32162 /* GameData.swift */; };
 		766226B61ECE31E300B32162 /* Square.swift in Sources */ = {isa = PBXBuildFile; fileRef = 766226B51ECE31E300B32162 /* Square.swift */; };
 		767D52BC1EC7E4AA0029A49A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 767D52BB1EC7E4AA0029A49A /* AppDelegate.swift */; };
@@ -44,6 +46,8 @@
 
 /* Begin PBXFileReference section */
 		7631BF4F1EE1017E00CEA2D4 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		763D28D91F1EDDE00004D629 /* TutorialScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TutorialScene.swift; sourceTree = "<group>"; };
+		763D28DB1F1EE16E0004D629 /* GeneralScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeneralScene.swift; sourceTree = "<group>"; };
 		766226B31ECE24C100B32162 /* GameData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameData.swift; sourceTree = "<group>"; };
 		766226B51ECE31E300B32162 /* Square.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Square.swift; sourceTree = "<group>"; };
 		767D52B81EC7E4AA0029A49A /* RoyalGame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RoyalGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -118,6 +122,8 @@
 				76D220CF1ED639AB00B28BAF /* Sprites.xcassets */,
 				767D52BB1EC7E4AA0029A49A /* AppDelegate.swift */,
 				767D52BF1EC7E4AA0029A49A /* GameScene.swift */,
+				763D28DB1F1EE16E0004D629 /* GeneralScene.swift */,
+				763D28D91F1EDDE00004D629 /* TutorialScene.swift */,
 				7631BF4F1EE1017E00CEA2D4 /* Extensions.swift */,
 				76E280BC1EDD0550003CA5F0 /* WinScene.swift */,
 				76D220C81ED41B2F00B28BAF /* Move.swift */,
@@ -292,8 +298,10 @@
 				7631BF501EE1017E00CEA2D4 /* Extensions.swift in Sources */,
 				766226B61ECE31E300B32162 /* Square.swift in Sources */,
 				767D52C01EC7E4AA0029A49A /* GameScene.swift in Sources */,
+				763D28DA1F1EDDE00004D629 /* TutorialScene.swift in Sources */,
 				766226B41ECE24C100B32162 /* GameData.swift in Sources */,
 				767D52C21EC7E4AA0029A49A /* GameViewController.swift in Sources */,
+				763D28DC1F1EE16E0004D629 /* GeneralScene.swift in Sources */,
 				76E280BD1EDD0550003CA5F0 /* WinScene.swift in Sources */,
 				767D52BC1EC7E4AA0029A49A /* AppDelegate.swift in Sources */,
 				76A841B91ECB979800D0B591 /* Token.swift in Sources */,

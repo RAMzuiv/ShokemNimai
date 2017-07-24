@@ -21,8 +21,9 @@ class GameData {
     var diceState = [false, false, false, false]
     var gameOver = false
     //var availableTypes = [[TokenType]](repeating: [.general, .peasant, .priest, .dancer, .siege, .knight, .jester], count: 2)
-    var availableTypes = [[Int]](repeating: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], count: 2)
+    var availableTypes = [[Int]](repeating: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], count: 2)
     let rosettes = [4, 9, 14]
+    var rosetteTimer = 0 // The amount of time that a piece has been on the rosette
     var moveNum = 0
     var addMove: Move?
     
@@ -36,6 +37,10 @@ class GameData {
         }
         */
         
+        if tokenAt(at: 9, side: 0) != nil {
+            rosetteTimer += 1 // Increase the rosette Timer
+        }
+        
         scan: if legalMoves.count == 0 {
             nextTurn() // if there are no legal moves, skip the player's turn
         } else if side == activePlayer || side == 0 { // only process the input if it is on the active player's side or in the middle
@@ -44,6 +49,9 @@ class GameData {
                     switch move.type {
                     case .move:
                         tokenAt(at: pos, side: side)!.position += jump
+                        if pos == 9 {
+                            rosetteTimer = 0 // Reset the rosette timer if a token leaves the rosette
+                        }
                     case .add:
                         createToken(at: pos, player: activePlayer)
                         tokenStock[activePlayer-1]-=1 // Take the token out of the player's stock
@@ -52,6 +60,9 @@ class GameData {
                         removeToken(at: pos + jump, player: activePlayer^3) // Remove a token that belongs to the other player at the new position
                         tokenAt(at: pos, side: side)!.position += jump
                         tokenStock[2-activePlayer]+=1 // Add the token back to the other player's stock
+                        if (pos + jump) == 9 || pos == 9 {
+                            rosetteTimer = 0 // Reset the rosette timer if a token captures the rosette or leaves the rosette
+                        }
                     case .remove:
                         removeToken(at: pos, player: activePlayer) // Remove the token from the board. Do not add it back to stock, since it is no longer in play
                     }
@@ -68,7 +79,7 @@ class GameData {
             // If we have reached this point, there is no valid move
             scene.invalidMove()
         } else {
-            scene.invalidMove()
+            scene.invalidMove() // The move is on the other player's side of the board
         }
     }
     
@@ -93,6 +104,7 @@ class GameData {
     }
     
     func nextTurn(doubleMove: Bool = false) {
+        print(rosetteTimer)
         let playerWin = hasPlayerWon() // 0 if nobody has won, 1 for P1, and 2 for P2
         if playerWin != 0 {
             gameover(playerWin)
@@ -175,7 +187,7 @@ class GameData {
                     if jumpToken.player == activePlayer { // The tokens belong to the same player - so it can't be moved
                         //print("\(token) has no legal moves")
                     } else { // The token belongs to the other player, so it can be captured
-                        if !rosettes.contains(jumpPos) { // Capture is prohibited on the rosetta
+                        if !rosettes.contains(jumpPos) || rosetteTimer >= 10 { // Capture is prohibited on the rosetta unless the timer is greater than 10
                             legalMoves.insert(Move(at: token.position, type: .capture))
                         }
                     }
@@ -269,7 +281,7 @@ class GameData {
                 scene.removeToken(token)
             }
         }
-        availableTypes = [[Int]](repeating: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], count: 2)
+        availableTypes = [[Int]](repeating: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], count: 2)
         moveNum = 0
         gameOver = false
         activePlayer = 1
