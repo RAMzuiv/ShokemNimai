@@ -33,9 +33,7 @@ class GeneralScene: SKScene {
     var diceValues = [false, false, false, false]
     var stockBoxes: (SKSpriteNode?, SKSpriteNode?)
     let errorSound = SKAction.playSoundFileNamed("Sound/error", waitForCompletion: false)
-    let thunder = SKTexture(imageNamed: "Thunder")
-    let hex = SKTexture(imageNamed: "Hex")
-    let sqRosetta = SKTexture(imageNamed: "squareRosetta")
+    let rosetta = SKTexture(imageNamed: "Rosetta")
     var musicPlayer = AVAudioPlayer()
     
     required init(coder: NSCoder) {

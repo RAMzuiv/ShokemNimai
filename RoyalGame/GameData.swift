@@ -104,7 +104,7 @@ class GameData {
     }
     
     func nextTurn(doubleMove: Bool = false) {
-        print(rosetteTimer)
+        //print(rosetteTimer)
         let playerWin = hasPlayerWon() // 0 if nobody has won, 1 for P1, and 2 for P2
         if playerWin != 0 {
             gameover(playerWin)
@@ -187,7 +187,7 @@ class GameData {
                     if jumpToken.player == activePlayer { // The tokens belong to the same player - so it can't be moved
                         //print("\(token) has no legal moves")
                     } else { // The token belongs to the other player, so it can be captured
-                        if !rosettes.contains(jumpPos) || rosetteTimer >= 10 { // Capture is prohibited on the rosetta unless the timer is greater than 10
+                        if !rosettes.contains(jumpPos) || rosetteTimer >= 20 { // Capture is prohibited on the rosetta unless the timer is greater than 20
                             legalMoves.insert(Move(at: token.position, type: .capture))
                         }
                     }
@@ -286,6 +286,7 @@ class GameData {
         gameOver = false
         activePlayer = 1
         tokenStock = [7,7]
+        rosetteTimer = 0
         tokens = []
         rollDice()
         scanMoves()

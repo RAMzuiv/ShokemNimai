@@ -2,11 +2,11 @@
   "images" : [
     {
       "idiom" : "universal",
+      "filename" : "RoseT11.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "Hexagon Universal.png",
       "scale" : "2x"
     },
     {

@@ -116,7 +116,7 @@ class GameScene: GeneralScene {
     }
     
     func addRosette(rank: Int, side: Int) {
-        let sprite = SKSpriteNode(texture: sqRosetta)
+        let sprite = SKSpriteNode(texture: rosetta)
         sprite.position = coordForTile(at: rank, side: side)
         //sprite.setScale(2/3 * TileSize!/oldIdealTileSize) //Use this for the old rosettas
         sprite.setScale(1/2 * TileSize!/oldIdealTileSize)
@@ -201,9 +201,9 @@ class GameScene: GeneralScene {
         let rosette = self.childNode(withName: "Center Rosette")! as! SKSpriteNode
         let rTimer = data.rosetteTimer
         if rTimer == 0 {
-            rosette.texture = SKTexture(imageNamed: "squareRosetta")
-        } else if rTimer >= 10 {
-            rosette.texture = SKTexture(imageNamed: "RosettaEmpty")
+            rosette.texture = SKTexture(imageNamed: "Rosetta")
+        } else if rTimer >= 20 {
+            rosette.texture = rosetta
         } else {
             rosette.texture = SKTexture(imageNamed: "RoseT\(rTimer)")
         }
