@@ -36,9 +36,8 @@ class Token: CustomStringConvertible, Hashable {
         case 4: return "token P\(player) hex"
         case 5: return "token P\(player) wave"
         case 6: return "token P\(player) hacker"
-        //case 7: return "token P\(player) glider"
-        case 8: return "token P\(player) octostar"
-        case 9: return "token P\(player) yin"
+        case 7: return "token P\(player) octostar"
+        case 8: return "token P\(player) yin"
         default: return "token P\(player)"
         }
     }

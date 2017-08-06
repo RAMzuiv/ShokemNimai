@@ -20,3 +20,7 @@ infix operator ^^: PowerPrecedence
 func ^^ (radix: Float, power: Int) -> Float {
     return Float(pow(Double(radix), Double(power)))
 }
+
+func randFloat() -> CGFloat {
+    return CGFloat(arc4random())/CGFloat(UINT32_MAX)
+}

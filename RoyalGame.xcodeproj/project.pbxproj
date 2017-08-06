@@ -21,6 +21,8 @@
 		767D52D51EC7E4AA0029A49A /* RoyalGameTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 767D52D41EC7E4AA0029A49A /* RoyalGameTests.swift */; };
 		767D52E01EC7E4AB0029A49A /* RoyalGameUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 767D52DF1EC7E4AB0029A49A /* RoyalGameUITests.swift */; };
 		768A21641EE7852300CF92E8 /* Sound in Resources */ = {isa = PBXBuildFile; fileRef = 768A21631EE7852300CF92E8 /* Sound */; };
+		76932D311F28808C0083D427 /* TutorialData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76932D301F28808C0083D427 /* TutorialData.swift */; };
+		76932D331F2BF3590083D427 /* BGEmitter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76932D321F2BF3590083D427 /* BGEmitter.swift */; };
 		76A841B91ECB979800D0B591 /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76A841B81ECB979800D0B591 /* Token.swift */; };
 		76D220C91ED41B2F00B28BAF /* Move.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76D220C81ED41B2F00B28BAF /* Move.swift */; };
 		76D220D01ED639AB00B28BAF /* Sprites.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 76D220CF1ED639AB00B28BAF /* Sprites.xcassets */; };
@@ -65,6 +67,8 @@
 		767D52DF1EC7E4AB0029A49A /* RoyalGameUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoyalGameUITests.swift; sourceTree = "<group>"; };
 		767D52E11EC7E4AB0029A49A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		768A21631EE7852300CF92E8 /* Sound */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Sound; sourceTree = "<group>"; };
+		76932D301F28808C0083D427 /* TutorialData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TutorialData.swift; sourceTree = "<group>"; };
+		76932D321F2BF3590083D427 /* BGEmitter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BGEmitter.swift; sourceTree = "<group>"; };
 		76A841B81ECB979800D0B591 /* Token.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Token.swift; sourceTree = "<group>"; };
 		76D220C81ED41B2F00B28BAF /* Move.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Move.swift; sourceTree = "<group>"; };
 		76D220CF1ED639AB00B28BAF /* Sprites.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Sprites.xcassets; sourceTree = "<group>"; };
@@ -123,12 +127,14 @@
 				767D52BB1EC7E4AA0029A49A /* AppDelegate.swift */,
 				767D52BF1EC7E4AA0029A49A /* GameScene.swift */,
 				763D28DB1F1EE16E0004D629 /* GeneralScene.swift */,
+				76932D321F2BF3590083D427 /* BGEmitter.swift */,
 				763D28D91F1EDDE00004D629 /* TutorialScene.swift */,
 				7631BF4F1EE1017E00CEA2D4 /* Extensions.swift */,
 				76E280BC1EDD0550003CA5F0 /* WinScene.swift */,
 				76D220C81ED41B2F00B28BAF /* Move.swift */,
 				766226B51ECE31E300B32162 /* Square.swift */,
 				766226B31ECE24C100B32162 /* GameData.swift */,
+				76932D301F28808C0083D427 /* TutorialData.swift */,
 				76A841B81ECB979800D0B591 /* Token.swift */,
 				767D52C11EC7E4AA0029A49A /* GameViewController.swift */,
 				767D52C31EC7E4AA0029A49A /* Main.storyboard */,
@@ -297,6 +303,7 @@
 				76D220C91ED41B2F00B28BAF /* Move.swift in Sources */,
 				7631BF501EE1017E00CEA2D4 /* Extensions.swift in Sources */,
 				766226B61ECE31E300B32162 /* Square.swift in Sources */,
+				76932D311F28808C0083D427 /* TutorialData.swift in Sources */,
 				767D52C01EC7E4AA0029A49A /* GameScene.swift in Sources */,
 				763D28DA1F1EDDE00004D629 /* TutorialScene.swift in Sources */,
 				766226B41ECE24C100B32162 /* GameData.swift in Sources */,
@@ -305,6 +312,7 @@
 				76E280BD1EDD0550003CA5F0 /* WinScene.swift in Sources */,
 				767D52BC1EC7E4AA0029A49A /* AppDelegate.swift in Sources */,
 				76A841B91ECB979800D0B591 /* Token.swift in Sources */,
+				76932D331F2BF3590083D427 /* BGEmitter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

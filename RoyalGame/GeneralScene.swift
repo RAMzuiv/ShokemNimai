@@ -10,16 +10,19 @@ import SpriteKit
 import AVFoundation
 
 class GeneralScene: SKScene {
+    let data: GameData!
     var board: Set<SKSpriteNode>!
     var touchBeginPos: CGPoint? // The beginning of a touch
     var activeSquare: (Int, Int)? // Rank and side of the active square
     
+    var frameNum = 0
+    var emitters: [BGEmitter] = []
     let PColour = [SKColor(1, 0, 0), SKColor(0, 0.95, 0)] // Main Colours for both players
     let PTileColour = [SKColor(1, 0.93, 0.95), SKColor(0.9, 1, 0.93)] // Tile colours for both players
     let PDiceOffColour = [SKColor(0.2, 0, 0), SKColor(0, 0.2, 0)] // Colour for the off dice
     let PDiceColour = [SKColor(0.45, 0.1, 0.1), SKColor(0.1, 0.4, 0.1)] // Colour for the dice box
     let PDiceOnColour = [SKColor(1, 0.1, 0.1), SKColor(0.3, 0.95, 0.3)] // Colour for the on dice
-    let BGColour = SKColor(0.53, 0.81, 0.92) // Background colour
+    let BGColour = SKColor(0.1, 0.12, 0.6) // Background colour
     let StrokeColour: SKColor = SKColor(0, 0.4, 0.8) // Stroke colour for tiles on board
     let TileColour = SKColor(1, 1, 1)
     let scrSize: CGSize?
@@ -29,21 +32,24 @@ class GeneralScene: SKScene {
     let vertShift: CGFloat!
     let addIndicator: SKSpriteNode // The indicator to show when an add move is allowed
     let oldIdealTileSize = 114.0 as CGFloat // The ideal size relative to the 9.7 iPad. Don't use this number
-    let idealTileSize = 152.0 as CGFloat // The ideal size relative to the 12.9. Make assets at 2x the resolution of the 12.9
+    let idealTileSize = 151.77777777 as CGFloat // The ideal size relative to the 12.9. Make assets at 2x the resolution of the 12.9
     var diceValues = [false, false, false, false]
     var stockBoxes: (SKSpriteNode?, SKSpriteNode?)
     let errorSound = SKAction.playSoundFileNamed("Sound/error", waitForCompletion: false)
     let rosetta = SKTexture(imageNamed: "Rosetta")
+    let boost = SKTexture(imageNamed: "boost")
     var musicPlayer = AVAudioPlayer()
+    let debugMode = false
     
     required init(coder: NSCoder) {
         fatalError("coder is not used in this app")
     }
     
-    override init(size: CGSize) {
+    init(size: CGSize, data: GameData) {
         //StrokeColour = BGColour
         self.scrSize = size
         self.TileSize = size.width/9
+        self.data = data
         vertGap = TileSize!/4
         horzShift = TileSize!
         vertShift = TileSize!+vertGap
@@ -54,6 +60,20 @@ class GeneralScene: SKScene {
         addIndicator.zPosition = 11
         addIndicator.alpha = 0
         
+        // Add a rectangle with screen blend mode
+        /*
+        blendRect = SKSpriteNode(color: SKColor(0.9, 0.9, 0.9), size: CGSize(width: 5000, height: 5000))
+        blendRect.anchorPoint = CGPoint(x: 0.5, y: 1)
+        blendRect.blendMode = .screen
+        blendRect.position = CGPoint(x: 0, y: 0)
+        blendRect.zPosition = 0
+        blendRect.alpha = 0.1
+         */
+        
+        for _ in 0..<15 {
+            emitters.append(BGEmitter(size: scrSize!))
+        }
+        
         super.init(size: size)
         
         anchorPoint = CGPoint(x: 0.5, y: 0.5)
@@ -61,56 +81,16 @@ class GeneralScene: SKScene {
         self.backgroundColor = BGColour // Set the background to the background colour
         
         // Add the background
+        /*
         let background = SKSpriteNode(imageNamed: "background")
         background.scale(to: self.scrSize!)
         background.zPosition = -1
         self.addChild(background)
+        */
         
-        // Add the tiles to the board
-        for side in [1, 2]{
-            for rank in (1...4) {
-                addTile(at: rank, side: side, bigTile: rank==4)
-            }
-            for rank in [13, 14] {
-                addTile(at: rank, side: side, bigTile: rank==13)
-            }
-        }
-        for rank in (5...12) {
-            addTile(at: rank, side: 0, bigTile: (rank==12)||(rank==5))
-        }
-        
-        // Add the stock counters
-        for player in [1,2] {
-            let SBSize = (TileSize!*3, TileSize!*1)
-            let stockBoxIn = SKSpriteNode(color: TileColour, size: CGSize(width: SBSize.0 - 1, height: SBSize.1 - 1))
-            let stockBox = SKSpriteNode(color: StrokeColour, size: CGSize(width: SBSize.0 + 1, height: SBSize.1 + 1))
-            stockBox.addChild(stockBoxIn)
-            stockBoxIn.zPosition = 10
-            stockBoxIn.name = "Stock Box"
-            stockBox.zPosition = 9
-            stockBox.position = CGPoint(x: -2*TileSize!, y: 2.5*TileSize!*CGFloat(player*2-3))
-            self.addChild(stockBox)
-            //let playerColour = PColour[player-1]
-            let tokenSize = SBSize.0*3/32
-            for i in 0..<7 {
-                //let spriteIn = SKSpriteNode(color: playerColour, size: CGSize(width: tokenSize - 1, height: tokenSize - 1))
-                //let sprite = SKSpriteNode(color: UIColor.black, size: CGSize(width: tokenSize + 1, height: tokenSize + 1))
-                //let sprite = SKShapeNode(rectOf: CGSize(width: tokenSize + 1, height: tokenSize + 1), cornerRadius: 5)
-                //sprite.fillColor = playerColour
-                //sprite.strokeColor = UIColor.black
-                //spriteIn.zPosition = 13
-                let sprite = SKSpriteNode(imageNamed: "Stock Tkn P\(player)")
-                sprite.setScale(1/2 * TileSize!/oldIdealTileSize)
-                sprite.zPosition = 11
-                sprite.name = "Stock P\(player) #\(i)"
-                //sprite.addChild(spriteIn)
-                stockBox.addChild(sprite)
-                sprite.position = CGPoint(x: CGFloat(i-3)*tokenSize*(17/12), y: 0.0)
-            }
-            switch player {
-            case 1: stockBoxes.0 = stockBox
-            case 2: stockBoxes.1 = stockBox
-            default: ()
+        for emitter in emitters {
+            for i in [0,1]{
+                self.addChild(emitter.blendRects[i])
             }
         }
         self.addChild(addIndicator)
@@ -134,20 +114,46 @@ class GeneralScene: SKScene {
         
     }
     
-    /*
-     override func update(_ currentTime: TimeInterval) {
-     for i in 0 ..< diceValues.count {
-     if arc4random_uniform(10) > 2{
-     diceValues[i] = !diceValues[i]
-     var state = 0
-     if diceValues[i] == true {
-     state = 1
-     }
-     setDieColor(die: i, state: state)
-     }
-     }
-     }
-     */
+    func addRosette(rank: Int, side: Int) {
+        let sprite = SKSpriteNode(texture: rosetta)
+        //let sprite = SKSpriteNode(imageNamed: "Stock Tkn P1")
+        let arrow = SKSpriteNode(texture: boost)
+        if rank == 4 {
+            if side == 1 {
+                arrow.zRotation = .pi
+            } else {
+                arrow.zRotation = 0
+            }
+        } else if rank == 14 {
+            arrow.zRotation = -.pi/2
+        }
+        sprite.position = coordForTile(at: rank, side: side)
+        sprite.setScale(1/2 * TileSize!/oldIdealTileSize)
+        arrow.zPosition = 10
+        arrow.position = sprite.position
+        sprite.zPosition = 13
+        arrow.setScale(1/2 * TileSize!/oldIdealTileSize)
+        if side == 0 {
+            arrow.zRotation = .pi/2
+            sprite.name = "Center Rosette"
+        } else {
+            arrow.texture = SKTexture(imageNamed: "boostP\(side)")
+        }
+        self.addChild(sprite)
+        self.addChild(arrow)
+    }
+    
+    override func update(_ currentTime: TimeInterval) {
+        frameNum += 1
+        if !debugMode {
+            for i in 0..<emitters.count {
+                if i % 2 == frameNum % 2 {
+                    let emitter = emitters[i]
+                    emitter.update()
+                }
+            }
+        }
+    }
     
     func removeToken(_ token: Token) {
         token.sprite?.run(SKAction.removeFromParent())
@@ -183,7 +189,60 @@ class GeneralScene: SKScene {
     }
     
     func addTile(at rank: Int, side: Int, bigTile: Bool = false, withButton: Bool = true) {
+        var tileColour = TileColour
+        if side != 0 {
+            tileColour = PTileColour[side-1] // Make the square the player's colour
+        }
+        let coords = coordForTile(at: rank, side: side)
+        if withButton{
+            let button = Square(scene: self, size: CGSize(width: TileSize!-1, height: TileSize!-1), at: rank, side: side)
+            button.isUserInteractionEnabled = true
+            button.zPosition = 30
+            self.addChild(button)
+            if bigTile {
+                button.size.height = TileSize!+vertGap*2/3-1
+                if side == 1 {
+                    button.position = CGPoint(x: coords.x, y: coords.y+vertGap/3)
+                } else if side == 2 {
+                    button.position = CGPoint(x: coords.x, y: coords.y-vertGap/3)
+                } else if side == 0 {
+                    button.position = coords
+                    button.size.height = TileSize!+vertGap*2/3-1
+                }
+            } else {
+                button.position = coords
+            }
+        }
+        // Make two rectangles at the given location, one with the tile colour, and a bigger one with the stroke colour
+        let inRect = SKSpriteNode(color: tileColour, size: CGSize(width: TileSize!-1, height: TileSize!-1))
+        //let inRect = SKShapeNode(rectOf: CGSize(width: TileSize!, height: TileSize!), cornerRadius: 0)
+        //inRect.strokeColor = StrokeColour
+        //inRect.fillColor = tileColour
+        let outRect = SKSpriteNode(color: StrokeColour, size: CGSize(width: TileSize!+1, height: TileSize!+1))
         
+        if bigTile {
+            //inRect.yScale = (1 + (vertGap/(TileSize!+1) * 2/3))
+            inRect.size.height = TileSize!+vertGap*2/3-1
+            outRect.size.height = TileSize!+vertGap*2/3+1
+            if side == 1 {
+                inRect.position = CGPoint(x: coords.x, y: coords.y+vertGap/3)
+                outRect.position = CGPoint(x: coords.x, y: coords.y+vertGap/3)
+            } else if side == 2 {
+                inRect.position = CGPoint(x: coords.x, y: coords.y-vertGap/3)
+                outRect.position = CGPoint(x: coords.x, y: coords.y-vertGap/3)
+            } else if side == 0 {
+                inRect.position = coords
+                outRect.position = coords
+            }
+        } else {
+            inRect.position = coords
+            outRect.position = coords
+        }
+        
+        inRect.zPosition = 10
+        outRect.zPosition = 9
+        self.addChild(inRect)
+        self.addChild(outRect)
     }
     
     func playBGM() {

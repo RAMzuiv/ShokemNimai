@@ -27,7 +27,8 @@ class GameViewController: UIViewController {
         data.scene = gameScene
         data.newGame()
         
-        let tutorialScene = TutorialScene(size: skView.bounds.size)
+        let tutData = TutorialData(controller: self)
+        let tutorialScene = TutorialScene(size: skView.bounds.size, data: tutData)
 
         // Configure the view.
         /* Sprite Kit applies additional optimizations to improve rendering performance */
@@ -37,6 +38,7 @@ class GameViewController: UIViewController {
         gameScene.scaleMode = .aspectFill
             
         skView.presentScene(gameScene)
+        //skView.presentScene(tutorialScene)
         //print("done!")
     }
     
