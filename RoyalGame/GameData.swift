@@ -17,14 +17,15 @@ class GameData {
     var activePlayer = 1 // 1 for P1, 2 for P2
     var jump = 0
     var legalMoves = Set<Move>()
-    var tokenStock = [7,7]
+    var tokenStock = [7, 7] // The number of tokens in each player's stock
+    var tokenFinish = [0, 0] // The number of tokens brought to each player's goal
     var diceState = [false, false, false, false]
     var gameOver = false
     //var availableTypes = [[TokenType]](repeating: [.general, .peasant, .priest, .dancer, .siege, .knight, .jester], count: 2)
     var availableTypes = [[Int]](repeating: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], count: 2)
     let rosettes = [4, 9, 14]
     var rosetteTimer = 0 // The amount of time that a piece has been on the rosette
-    var moveNum = 0
+    var moveNum = 0 // The number of moves made in the game
     var addMove: Move?
     
     func executeMove(at pos: Int, side: Int) { // 1 for P1 side, 2 for P2 side, 0 for middle
@@ -53,18 +54,20 @@ class GameData {
                             rosetteTimer = 0 // Reset the rosette timer if a token leaves the rosette
                         }
                     case .add:
-                        createToken(at: pos, player: activePlayer)
-                        tokenStock[activePlayer-1]-=1 // Take the token out of the player's stock
+                        createToken(at: jump, player: activePlayer)
+                        tokenStock[activePlayer-1] -= 1 // Take the token out of the player's stock
                     case .capture:
                         availableTypes[2-activePlayer].append(tokenAt(at: pos + jump, side: 2 - activePlayer)!.tokenType)
                         removeToken(at: pos + jump, player: activePlayer^3) // Remove a token that belongs to the other player at the new position
                         tokenAt(at: pos, side: side)!.position += jump
-                        tokenStock[2-activePlayer]+=1 // Add the token back to the other player's stock
+                        tokenStock[2-activePlayer] += 1 // Add the token back to the other player's stock
                         if (pos + jump) == 9 || pos == 9 {
                             rosetteTimer = 0 // Reset the rosette timer if a token captures the rosette or leaves the rosette
                         }
                     case .remove:
                         removeToken(at: pos, player: activePlayer) // Remove the token from the board. Do not add it back to stock, since it is no longer in play
+                        tokenFinish[activePlayer-1] += 1 // Add a token to the pool of finished tokens
+                        print(tokenFinish)
                     }
                     if move.doubleMove{
                         nextTurn(doubleMove: true) // If the move lands on a rosetta (the thunderbolt or the safe spot), they can move again
@@ -132,6 +135,7 @@ class GameData {
     }
     
     func hasPlayerWon() -> Int {
+        /*
         var P1Empty = true
         var P2Empty = true
         for token in tokens { // Check to see if each player has any tokens on the board
@@ -148,6 +152,14 @@ class GameData {
             return 2
         } else {
             return 0 // Return 0 if nobody has won yet
+        }
+        */
+        if tokenFinish[0] >= 5 {
+            return 1
+        } else if tokenFinish[1] >= 5 {
+            return 2
+        } else {
+            return 0
         }
     }
     
@@ -207,12 +219,12 @@ class GameData {
         if tokenAt(at: jump, side: activePlayer) == nil && jump != 0 {
             if tokenStock[activePlayer-1]>0 {
                 if !rosettes.contains(jump) {
-                    let move = Move(at: jump, type: .add)
+                    let move = Move(at: 0, type: .add)
                     //legalMoves.insert(Move(at: jump, type: .add))
                     legalMoves.insert(move)
                     addMove = move
                 } else { //Double moves on the rosetta
-                    let move = Move(at: jump, type: .add, doubleMove: true)
+                    let move = Move(at: 0, type: .add, doubleMove: true)
                     //legalMoves.insert(Move(at: jump, type: .add, doubleMove: true))
                     legalMoves.insert(move)
                     addMove = move
@@ -285,7 +297,8 @@ class GameData {
         moveNum = 0
         gameOver = false
         activePlayer = 1
-        tokenStock = [7,7]
+        tokenStock = [7, 7]
+        tokenFinish = [0, 0]
         rosetteTimer = 0
         tokens = []
         rollDice()

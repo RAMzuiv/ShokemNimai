@@ -6,6 +6,7 @@
 //  Copyright © 2017 Mikkel Wilson. All rights reserved.
 //
 
+import UIKit
 import SpriteKit
 import AVFoundation
 
@@ -18,13 +19,18 @@ class GeneralScene: SKScene {
     var frameNum = 0
     var emitters: [BGEmitter] = []
     let PColour = [SKColor(1, 0, 0), SKColor(0, 0.95, 0)] // Main Colours for both players
-    let PTileColour = [SKColor(1, 0.93, 0.95), SKColor(0.9, 1, 0.93)] // Tile colours for both players
+    let PStartColour = [SKColor(1, 0.93, 0.95), SKColor(0.9, 1, 0.93)] // Colour for the start of the track
+    let PGoalColour = [SKColor(0.55, 0.05, 0.05), SKColor(0.05, 0.55, 0.05)] // Colour for the goals
     let PDiceOffColour = [SKColor(0.2, 0, 0), SKColor(0, 0.2, 0)] // Colour for the off dice
     let PDiceColour = [SKColor(0.45, 0.1, 0.1), SKColor(0.1, 0.4, 0.1)] // Colour for the dice box
     let PDiceOnColour = [SKColor(1, 0.1, 0.1), SKColor(0.3, 0.95, 0.3)] // Colour for the on dice
     let BGColour = SKColor(0.1, 0.12, 0.6) // Background colour
-    let StrokeColour: SKColor = SKColor(0, 0.4, 0.8) // Stroke colour for tiles on board
-    let TileColour = SKColor(1, 1, 1)
+    //let StrokeColour: SKColor = SKColor(0, 0.4, 0.8) // Stroke colour for tiles on board
+    let StrokeColour = SKColor(0.1, 0.12, 0.6)
+    let TileColour = SKColor(0.9, 0.9, 0.9)
+    //let PTileColour = [SKColor(1, 0.93, 0.95), SKColor(0.9, 1, 0.93)] // Tile colours for both players
+    let PTileColour = [SKColor(0.9, 0.7, 0.5), SKColor(0.7, 0.9, 0.5)] // Tile colours for both players
+    let TileAlpha: CGFloat = 0.8
     let scrSize: CGSize?
     let TileSize: CGFloat?
     let vertGap: CGFloat!
@@ -60,16 +66,6 @@ class GeneralScene: SKScene {
         addIndicator.zPosition = 11
         addIndicator.alpha = 0
         
-        // Add a rectangle with screen blend mode
-        /*
-        blendRect = SKSpriteNode(color: SKColor(0.9, 0.9, 0.9), size: CGSize(width: 5000, height: 5000))
-        blendRect.anchorPoint = CGPoint(x: 0.5, y: 1)
-        blendRect.blendMode = .screen
-        blendRect.position = CGPoint(x: 0, y: 0)
-        blendRect.zPosition = 0
-        blendRect.alpha = 0.1
-         */
-        
         for _ in 0..<15 {
             emitters.append(BGEmitter(size: scrSize!))
         }
@@ -93,7 +89,8 @@ class GeneralScene: SKScene {
                 self.addChild(emitter.blendRects[i])
             }
         }
-        self.addChild(addIndicator)
+        
+        //self.addChild(addIndicator)
         
         //playBGM()
     }
@@ -145,9 +142,9 @@ class GeneralScene: SKScene {
     
     override func update(_ currentTime: TimeInterval) {
         frameNum += 1
-        if !debugMode {
+        if !debugMode && frameNum%3 != 0 {
             for i in 0..<emitters.count {
-                if i % 2 == frameNum % 2 {
+                if i % 2 == frameNum % 3 && ((i + data.moveNum) % 3 >= 1) {
                     let emitter = emitters[i]
                     emitter.update()
                 }
@@ -214,7 +211,7 @@ class GeneralScene: SKScene {
             }
         }
         // Make two rectangles at the given location, one with the tile colour, and a bigger one with the stroke colour
-        let inRect = SKSpriteNode(color: tileColour, size: CGSize(width: TileSize!-1, height: TileSize!-1))
+        let inRect = SKSpriteNode(color: tileColour, size: CGSize(width: TileSize!-2, height: TileSize!-2))
         //let inRect = SKShapeNode(rectOf: CGSize(width: TileSize!, height: TileSize!), cornerRadius: 0)
         //inRect.strokeColor = StrokeColour
         //inRect.fillColor = tileColour
@@ -222,7 +219,7 @@ class GeneralScene: SKScene {
         
         if bigTile {
             //inRect.yScale = (1 + (vertGap/(TileSize!+1) * 2/3))
-            inRect.size.height = TileSize!+vertGap*2/3-1
+            inRect.size.height = TileSize!+vertGap*2/3-2
             outRect.size.height = TileSize!+vertGap*2/3+1
             if side == 1 {
                 inRect.position = CGPoint(x: coords.x, y: coords.y+vertGap/3)
@@ -240,7 +237,9 @@ class GeneralScene: SKScene {
         }
         
         inRect.zPosition = 10
-        outRect.zPosition = 9
+        outRect.zPosition = -9
+        //inRect.alpha = TileAlpha
+        inRect.blendMode = .screen
         self.addChild(inRect)
         self.addChild(outRect)
     }
