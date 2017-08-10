@@ -22,7 +22,7 @@ class GameData {
     var diceState = [false, false, false, false]
     var gameOver = false
     //var availableTypes = [[TokenType]](repeating: [.general, .peasant, .priest, .dancer, .siege, .knight, .jester], count: 2)
-    var availableTypes = [[Int]](repeating: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], count: 2)
+    var availableTypes = [[Int]](repeating: [1, 2, 3, 4, 5, 6, 7, 8, 9], count: 2)
     let rosettes = [4, 9, 14]
     var rosetteTimer = 0 // The amount of time that a piece has been on the rosette
     var moveNum = 0 // The number of moves made in the game
@@ -67,7 +67,6 @@ class GameData {
                     case .remove:
                         removeToken(at: pos, player: activePlayer) // Remove the token from the board. Do not add it back to stock, since it is no longer in play
                         tokenFinish[activePlayer-1] += 1 // Add a token to the pool of finished tokens
-                        print(tokenFinish)
                     }
                     if move.doubleMove{
                         nextTurn(doubleMove: true) // If the move lands on a rosetta (the thunderbolt or the safe spot), they can move again
@@ -231,7 +230,6 @@ class GameData {
                 }
             }
         }
-        //print(legalMoves)
     }
     
     func rollDice() {

@@ -12,7 +12,6 @@ import AVFoundation
 class GameScene: GeneralScene {
     let dice: SKSpriteNode
     var dieSize: CGFloat?
-    var goals: [SKSpriteNode] = []
     
     required init(coder: NSCoder) {
         fatalError("coder is not used in this app")
@@ -41,6 +40,7 @@ class GameScene: GeneralScene {
         }
         
         // Add the goals
+        /*
         for player in [1, 2] {
             let goalIn = SKSpriteNode(color: PGoalColour[player-1], size: CGSize(width: tSize+vertGap*2/3 - 4, height: tSize+vertGap*2/3 - 2))
             let goal = SKSpriteNode(color: StrokeColour, size: CGSize(width: tSize+vertGap*2/3 + 1, height: tSize+vertGap*2/3 + 1))
@@ -64,43 +64,14 @@ class GameScene: GeneralScene {
             self.addChild(goal)
             goals.append(goal)
         }
+        */
+        for player in [1, 2] {
+            addGoal(player: player)
+        }
         
         // Add the stock counters
         for player in [1, 2] {
-            let SBSize = (TileSize!*1, TileSize!*1)
-            let stockBoxIn = SKSpriteNode(color: PStartColour[player-1], size: CGSize(width: SBSize.0 - 2, height: SBSize.1 - 2))
-            let stockBox = SKSpriteNode(color: StrokeColour, size: CGSize(width: SBSize.0 + 1, height: SBSize.1 + 1))
-            //stockBox.alpha = TileAlpha
-            stockBox.addChild(stockBoxIn)
-            stockBoxIn.zPosition = 10
-            stockBoxIn.name = "Stock Box"
-            stockBox.zPosition = -9
-            //stockBox.position = CGPoint(x: -2*TileSize!, y: 2.5*TileSize!*CGFloat(player*2-3))
-            stockBox.position = CGPoint(x: -0.5*TileSize!, y: (2*TileSize! + vertGap)*CGFloat(player*2-3))
-            self.addChild(stockBox)
-            //let playerColour = PColour[player-1]
-            //let tokenSize = SBSize.0*3/32
-            for i in 0..<7 {
-                //let spriteIn = SKSpriteNode(color: playerColour, size: CGSize(width: tokenSize - 1, height: tokenSize - 1))
-                //let sprite = SKSpriteNode(color: UIColor.black, size: CGSize(width: tokenSize + 1, height: tokenSize + 1))
-                //let sprite = SKShapeNode(rectOf: CGSize(width: tokenSize + 1, height: tokenSize + 1), cornerRadius: 5)
-                //sprite.fillColor = playerColour
-                //sprite.strokeColor = UIColor.black
-                //spriteIn.zPosition = 13
-                let sprite = SKSpriteNode(imageNamed: "Stock Tkn P\(player)")
-                sprite.setScale(1/2 * TileSize!/oldIdealTileSize)
-                sprite.zPosition = 11
-                sprite.name = "Stock P\(player) #\(i)"
-                //sprite.addChild(spriteIn)
-                stockBox.addChild(sprite)
-                //sprite.position = CGPoint(x: CGFloat(i-3)*tokenSize*(17/12), y: 0.0)
-                sprite.position = posForStock(num: i, side: player)
-            }
-            switch player {
-            case 1: stockBoxes.0 = stockBox
-            case 2: stockBoxes.1 = stockBox
-            default: ()
-            }
+            addStockCounter(player: player)
         }
         
         // Add the dice
@@ -191,22 +162,6 @@ class GameScene: GeneralScene {
     }
     
     override func onSquareTouch(at rank: Int, side: Int, touch: UITouch) {
-        //self.data.touch(at: rank, side: side)
-        /*
-        if let moveType = data.typeForMove(at: rank, side: side) {
-            if moveType == .add {
-                data.executeMove(at: rank, side: side)
-            } else {
-                if debugMode {
-                    data.executeMove(at: rank, side: side)
-                } else {
-                    touchBeginPos = touch.location(in: self)
-                    activeSquare = (rank, side)
-                }
-            }
-        }
-         */
-        
         if data.typeForMove(at: rank, side: side) != nil {
             if debugMode {
                 data.executeMove(at: rank, side: side)
@@ -215,43 +170,6 @@ class GameScene: GeneralScene {
                 activeSquare = (rank, side)
             }
         }
-    }
-    
-    func posForStock(num: Int, side: Int) -> CGPoint {
-        var xDir = 0.0
-        if num == 1 || num == 4 || num == 5 {
-            xDir = 0.5
-        } else if num == 2 || num == 3 || num == 6 {
-            xDir = -0.5
-        }
-        var yDir = 0.0
-        if num == 1 || num == 2 {
-            yDir = 1.0
-        } else if num == 5 || num == 6 {
-            yDir = -1.0
-        } else {
-            xDir *= 2
-        }
-        if side == 2 {
-            yDir *= -1
-        }
-        return CGPoint(x: 47*xDir, y: 47*yDir)
-        //return CGPoint(x: CGFloat(num - 3)*1*(17/12), y: 0.0)
-    }
-    
-    func posForFinish(num: Int, side: Int) -> CGPoint {
-        let angle = .pi * (Float(num) * 2/5 + Float(side) + 1)
-        return CGPoint(x: 45 * CGFloat(sin(angle)), y: 45 * CGFloat(cos(angle)))
-    }
-    
-    func posForDie(side: Int) -> CGPoint {
-        var y = 2*vertShift + vertGap/4
-        if side == 1 {
-            y *= -1
-        } else {
-            y *= 1
-        }
-        return CGPoint(x: 2.9*horzShift, y: y)
     }
     
     func setDieColor(die dieNum: Int, state: Int) { // State 0 is off, 1 is on during rolling, 2 is on normally

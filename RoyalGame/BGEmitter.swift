@@ -14,7 +14,7 @@ class BGEmitter {
     var angV: CGFloat! // Angular velocity
     let scrSize: CGSize! // The size of the screen
     let maxAngV: CGFloat = 0.0002 // The maximum angular velocity
-    let maxVel: CGFloat = 0.4
+    let maxVel: CGFloat = 0.6
     let minVel: CGFloat = 0.1
     var blendRects: [SKSpriteNode]
     
@@ -54,14 +54,14 @@ class BGEmitter {
         blendRects[1].position.y = -blendRects[0].position.y
         // If the particle gets close to the edge of the screen, push it back towards the center
         if blendRects[0].position.x < scrSize.width * -9 / 20 { // -9/20 is close to -1/2, which is the left side of the screen
-            vel.0 += 0.01
+            vel.0 += 0.05
         } else if blendRects[0].position.x > scrSize.width * 9 / 20 { // 9/20 is close to 1/2, which is the right side of the screen
-            vel.0 -= 0.01
+            vel.0 -= 0.05
         }
         if blendRects[0].position.y < scrSize.height * -9 / 20 { // -9/20 is close to -1/2, which is the left side of the screen
-            vel.1 += 0.01
+            vel.1 += 0.05
         } else if blendRects[0].position.y > scrSize.height * 9 / 20 { // 9/20 is close to 1/2, which is the right side of the screen
-            vel.1 -= 0.01
+            vel.1 -= 0.05
         }
         let speed = Float(vel.0)^^2 + Float(vel.1)^^2
         if speed > Float(maxVel)^^2 {

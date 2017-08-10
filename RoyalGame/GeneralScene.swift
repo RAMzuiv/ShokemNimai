@@ -41,6 +41,7 @@ class GeneralScene: SKScene {
     let idealTileSize = 151.77777777 as CGFloat // The ideal size relative to the 12.9. Make assets at 2x the resolution of the 12.9
     var diceValues = [false, false, false, false]
     var stockBoxes: (SKSpriteNode?, SKSpriteNode?)
+    var goals: [SKSpriteNode] = []
     let errorSound = SKAction.playSoundFileNamed("Sound/error", waitForCompletion: false)
     let rosetta = SKTexture(imageNamed: "Rosetta")
     let boost = SKTexture(imageNamed: "boost")
@@ -185,6 +186,43 @@ class GeneralScene: SKScene {
         return CGPoint(x: (CGFloat(x)+1/2)*horzShift, y: CGFloat(y)*vertShift)
     }
     
+    func posForStock(num: Int, side: Int) -> CGPoint {
+        var xDir: CGFloat = 0.0
+        if num == 1 || num == 4 || num == 5 {
+            xDir = 0.5
+        } else if num == 2 || num == 3 || num == 6 {
+            xDir = -0.5
+        }
+        var yDir: CGFloat = 0.0
+        if num == 1 || num == 2 {
+            yDir = 1.0
+        } else if num == 5 || num == 6 {
+            yDir = -1.0
+        } else {
+            xDir *= 2
+        }
+        if side == 2 {
+            yDir *= -1
+        }
+        return CGPoint(x: TileSize!/idealTileSize*47*xDir, y: TileSize!/idealTileSize*47*yDir)
+        //return CGPoint(x: CGFloat(num - 3)*1*(17/12), y: 0.0)
+    }
+    
+    func posForFinish(num: Int, side: Int) -> CGPoint {
+        let angle = .pi * (Float(num) * 2/5 + Float(side) + 1)
+        return CGPoint(x: TileSize!/idealTileSize*45 * CGFloat(sin(angle)), y: TileSize!/idealTileSize*45 * CGFloat(cos(angle)))
+    }
+    
+    func posForDie(side: Int) -> CGPoint {
+        var y = 2*vertShift + vertGap/4
+        if side == 1 {
+            y *= -1
+        } else {
+            y *= 1
+        }
+        return CGPoint(x: 2.9*horzShift, y: y)
+    }
+    
     func addTile(at rank: Int, side: Int, bigTile: Bool = false, withButton: Bool = true) {
         var tileColour = TileColour
         if side != 0 {
@@ -242,6 +280,54 @@ class GeneralScene: SKScene {
         inRect.blendMode = .screen
         self.addChild(inRect)
         self.addChild(outRect)
+    }
+    
+    func addStockCounter(player: Int, below rank: Int = 1) {
+        let SBSize = (TileSize!*1, TileSize!*1)
+        let stockBoxIn = SKSpriteNode(color: PStartColour[player-1], size: CGSize(width: SBSize.0 - 2, height: SBSize.1 - 2))
+        let stockBox = SKSpriteNode(color: StrokeColour, size: CGSize(width: SBSize.0 + 1, height: SBSize.1 + 1))
+        //stockBox.alpha = TileAlpha
+        stockBox.addChild(stockBoxIn)
+        stockBoxIn.zPosition = 10
+        stockBoxIn.name = "Stock Box"
+        stockBox.zPosition = -9
+        let abovePos = coordForTile(at: rank, side: player)
+        //stockBox.position = CGPoint(x: -0.5*TileSize!, y: (2*TileSize! + vertGap)*CGFloat(player*2-3))
+        stockBox.position = CGPoint(x: abovePos.x, y: abovePos.y + (CGFloat(player)*2 - 3) * TileSize!)
+        self.addChild(stockBox)
+        for i in 0..<7 {
+            let sprite = SKSpriteNode(imageNamed: "Stock Tkn P\(player)")
+            sprite.setScale(1/2 * TileSize!/oldIdealTileSize)
+            sprite.zPosition = 11
+            sprite.name = "Stock P\(player) #\(i)"
+            stockBox.addChild(sprite)
+            sprite.position = posForStock(num: i, side: player)
+        }
+        switch player {
+        case 1: stockBoxes.0 = stockBox
+        case 2: stockBoxes.1 = stockBox
+        default: ()
+        }
+    }
+    
+    func addGoal(player: Int, at rank: Int = 15) {
+        let goal = SKSpriteNode(color: PGoalColour[player-1], size: CGSize(width: TileSize!+vertGap*2/3 - 4, height: TileSize!+vertGap*2/3 - 2))
+        let coord = coordForTile(at: rank, side: player)
+        goal.position = CGPoint(x: coord.x - vertGap*1/3, y: coord.y + (CGFloat(player)*2 - 3)*vertGap*1/3)
+        goal.zPosition = 10
+        //goal.alpha = TileAlpha
+        for i in 0..<5 {
+            let sprite = SKShapeNode(circleOfRadius: TileSize!/idealTileSize*17)
+            sprite.fillColor = PDiceOffColour[player - 1]
+            sprite.strokeColor = PDiceOffColour[player - 1]
+            sprite.alpha = 1
+            goal.addChild(sprite)
+            sprite.position = posForFinish(num: i, side: player)
+            sprite.zPosition = 13
+            sprite.name = "Token P\(player) #\(i)"
+        }
+        self.addChild(goal)
+        goals.append(goal)
     }
     
     func playBGM() {
