@@ -17,27 +17,37 @@ class TutorialScene: GeneralScene {
     var tknSprite: SKSpriteNode?
     var enemy: SKSpriteNode?
     var dice: SKSpriteNode?
+    var slideIndicator: SKSpriteNode?
     var diceValue = [true, false, false, true]
+    var sliderPos: CGPoint?
+    var timer: Timer?
+    var splash: SKSpriteNode
     
     required init(coder: NSCoder) {
+        splash = SKSpriteNode()
         super.init(coder: coder)
     }
     
     override init(size: CGSize, data: GameData) {
+        splash = SKSpriteNode(imageNamed: "Splash")
+        
         super.init(size: size, data: data)
         text.fontSize=size.height/8
         text.verticalAlignmentMode = .center
         text.position = CGPoint(x: 0, y: size.height*5/24)
-        text.text = "Shokem Nimai"
-        text.fontColor = PGoalColour[0]
+        text.text = ""
+        text.fontColor = SKColor(0.7, 0.1, 0.05)
+        text.zPosition = 5
         subtext.fontSize=size.height/12
         subtext.verticalAlignmentMode = .center
         subtext.position = CGPoint(x: 0, y: size.height*2/24)
-        subtext.text = "The Ancient Game of the River"
+        subtext.text = ""
+        subtext.zPosition = 5
         //subtext.fontColor = PGoalColour[0]
         subtext.fontColor = SKColor(0.6, 0.45, 0.0)
         self.addChild(text)
         self.addChild(subtext)
+        self.addChild(splash)
     }
     
     func addBoard() {
@@ -54,7 +64,7 @@ class TutorialScene: GeneralScene {
         
         // Add the stock
         addStockCounter(player: 1, below: 5)
-        stockBoxes.0?.position.y += TileSize!
+        stockBoxes.0!.position.y += TileSize!
         
         // Add the rosettes
         for rosette in [9] {
@@ -84,17 +94,28 @@ class TutorialScene: GeneralScene {
         switch phase {
         case 0:
             let box = SKSpriteNode(color: SKColor.white, size: CGSize(width: scrSize!.width*0.95, height: scrSize!.height*0.2))
-            box.alpha = 0.5
+            box.alpha = 0.7
             box.position = CGPoint(x: 0, y: scrSize!.height*0.17)
+            box.zPosition = 1
             self.addChild(box)
             phase = 1
             addBoard()
-            text.text = "Shokem Nimai is played by 2 opponents eye-to-eye"
+            slideIndicator = SKSpriteNode(imageNamed: "Slide")
+            sliderPos = stockBoxes.0!.position
+            slideIndicator!.position = sliderPos!
+            slideIndicator?.zPosition = 15
+            slideIndicator?.setScale(7/12 * TileSize!/idealTileSize)
+            self.addChild(slideIndicator!)
+            timer = Timer.scheduledTimer(timeInterval: 2.5, target: self, selector: #selector(slideSlider), userInfo: nil, repeats: true)
+            timer!.fire()
+            slideSlider()
+            text.text = "Shokem Nimai is played by 2 rivals facing eye-to-eye"
             text.fontSize = scrSize!.height/20
             subtext.text = "Slide a piece onto the board to begin"
             subtext.fontSize = scrSize!.height/24
             subtext.position.y = scrSize!.height*3/24
             nextSquare = 0
+            splash.alpha = 0
         case 1:
             phase = 2
             nextSquare = 6
@@ -103,6 +124,7 @@ class TutorialScene: GeneralScene {
             tknSprite = SKSpriteNode(imageNamed: "token P1")
             tknSprite!.setScale(1/2 * TileSize!/oldIdealTileSize)
             let coord = self.coordForTile(at: 6, side: 0)
+            sliderPos = coord
             tknSprite!.position = coord
             tknSprite!.zPosition = 11
             self.addChild(tknSprite!)
@@ -111,6 +133,7 @@ class TutorialScene: GeneralScene {
             nextSquare = 7
             enemy!.alpha = 0
             tknSprite!.position = coordForTile(at: 7, side: 0)
+            sliderPos = coordForTile(at: 7, side: 0)
             text.text = "The Dice governs all play"
             subtext.text = "You can move one piece exactly as far as the dice says per turn"
             // Add the dice
@@ -138,15 +161,17 @@ class TutorialScene: GeneralScene {
             phase = 4
             nextSquare = 9
             tknSprite!.position = coordForTile(at: 9, side: 0)
+            sliderPos = coordForTile(at: 9, side: 0)
             diceValue = [true, true, false, false]
             updateDice()
             text.text = "Landing on a boost pad gives an extra turn"
             subtext.text = "It will also protect you from enemy attacks, for a while"
         case 4:
             phase = 5
-            nextSquare = 1
+            nextSquare = nil
             tknSprite!.alpha = 0
             diceValue = [false, false, false, false]
+            timer!.invalidate()
             updateDice()
             text.text = "That's all there is to it!"
             subtext.text = "So grab a friend, and have fun!"
@@ -260,6 +285,26 @@ class TutorialScene: GeneralScene {
         }
         die.fillColor = colour
         die.strokeColor = colour
+    }
+    
+    override func posForDie(side: Int) -> CGPoint {
+        return CGPoint(x: 0, y: TileSize!/idealTileSize*380)
+    }
+    
+    func slideSlider() {
+        slideIndicator!.alpha = 1
+        slideIndicator!.position = sliderPos!
+        var newPos = slideIndicator!.position
+        newPos.x += TileSize!
+        let duration: TimeInterval = 2
+        let moveAnim = SKAction.move(to: newPos, duration: duration)
+        let fadeAnim = SKAction.fadeOut(withDuration: duration * 0.5)
+        fadeAnim.timingMode = SKActionTimingMode.easeOut
+        moveAnim.timingMode = SKActionTimingMode.easeOut
+        let fadeComp = SKAction.sequence([SKAction.wait(forDuration: duration*0.5), fadeAnim])
+        let compAnim = SKAction.group([fadeComp, moveAnim])
+        
+        slideIndicator!.run(compAnim)
     }
 }
 

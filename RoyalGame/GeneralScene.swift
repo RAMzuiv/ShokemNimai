@@ -220,7 +220,7 @@ class GeneralScene: SKScene {
         } else {
             y *= 1
         }
-        return CGPoint(x: 2.9*horzShift, y: y)
+        return CGPoint(x: -2*horzShift, y: y)
     }
     
     func addTile(at rank: Int, side: Int, bigTile: Bool = false, withButton: Bool = true) {

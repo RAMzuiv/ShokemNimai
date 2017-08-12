@@ -27,7 +27,7 @@ class GameViewController: UIViewController {
         data.scene = gameScene
         data.newGame()
         
-        let tutData = TutorialData(controller: self)
+        //let tutData = TutorialData(controller: self)
         let tutorialScene = TutorialScene(size: skView.bounds.size, data: data)
 
         // Configure the view.
