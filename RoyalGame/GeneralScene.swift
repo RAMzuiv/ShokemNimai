@@ -18,18 +18,18 @@ class GeneralScene: SKScene {
     
     var frameNum = 0
     var emitters: [BGEmitter] = []
-    let PColour = [SKColor(1, 0, 0), SKColor(0, 0.95, 0)] // Main Colours for both players
-    let PStartColour = [SKColor(1, 0.93, 0.95), SKColor(0.9, 1, 0.93)] // Colour for the start of the track
-    let PGoalColour = [SKColor(0.55, 0.05, 0.05), SKColor(0.05, 0.55, 0.05)] // Colour for the goals
-    let PDiceOffColour = [SKColor(0.2, 0, 0), SKColor(0, 0.2, 0)] // Colour for the off dice
-    let PDiceColour = [SKColor(0.45, 0.1, 0.1), SKColor(0.1, 0.4, 0.1)] // Colour for the dice box
-    let PDiceOnColour = [SKColor(1, 0.1, 0.1), SKColor(0.3, 0.95, 0.3)] // Colour for the on dice
+    var PColour = [SKColor(1, 0, 0), SKColor(0, 0.95, 0)] // Main Colours for both players
+    var PStartColour = [SKColor(1, 0.93, 0.95), SKColor(0.9, 1, 0.93)] // Colour for the start of the track
+    var PGoalColour = [SKColor(0.55, 0.05, 0.05), SKColor(0.05, 0.55, 0.05)] // Colour for the goals
+    var PDiceOffColour = [SKColor(0.2, 0, 0), SKColor(0, 0.2, 0)] // Colour for the off dice
+    var PDiceColour = [SKColor(0.45, 0.1, 0.1), SKColor(0.1, 0.4, 0.1)] // Colour for the dice box
+    var PDiceOnColour = [SKColor(1, 0.1, 0.1), SKColor(0.3, 0.95, 0.3)] // Colour for the on dice
     let BGColour = SKColor(0.1, 0.12, 0.6) // Background colour
     //let StrokeColour: SKColor = SKColor(0, 0.4, 0.8) // Stroke colour for tiles on board
     let StrokeColour = SKColor(0.1, 0.12, 0.6)
     let TileColour = SKColor(0.9, 0.9, 0.9)
     //let PTileColour = [SKColor(1, 0.93, 0.95), SKColor(0.9, 1, 0.93)] // Tile colours for both players
-    let PTileColour = [SKColor(0.9, 0.7, 0.5), SKColor(0.7, 0.9, 0.5)] // Tile colours for both players
+    var PTileColour = [SKColor(0.9, 0.7, 0.5), SKColor(0.7, 0.9, 0.5)] // Tile colours for both players
     let TileAlpha: CGFloat = 0.8
     let scrSize: CGSize?
     let TileSize: CGFloat?
@@ -42,17 +42,22 @@ class GeneralScene: SKScene {
     var diceValues = [false, false, false, false]
     var stockBoxes: (SKSpriteNode?, SKSpriteNode?)
     var goals: [SKSpriteNode] = []
+    var slideIndicator: SKSpriteNode?
+    var sliderPos: CGPoint?
+    var slideTimer: Timer?
     let errorSound = SKAction.playSoundFileNamed("Sound/error", waitForCompletion: false)
     let rosetta = SKTexture(imageNamed: "Rosetta")
-    let boost = SKTexture(imageNamed: "boost")
+    //let boost = SKTexture(imageNamed: "boost")
+    let boost = SKTexture(imageNamed: "boost mask")
     var musicPlayer = AVAudioPlayer()
     let debugMode = false
+    var previewMode = false
     
     required init(coder: NSCoder) {
         fatalError("coder is not used in this app")
     }
     
-    init(size: CGSize, data: GameData) {
+    init(size: CGSize, data: GameData, preview: Bool = false) {
         //StrokeColour = BGColour
         self.scrSize = size
         self.TileSize = size.width/9
@@ -68,10 +73,14 @@ class GeneralScene: SKScene {
         addIndicator.alpha = 0
         
         for _ in 0..<15 {
-            emitters.append(BGEmitter(size: scrSize!))
+            emitters.append(BGEmitter(size: scrSize!, darkMode: preview))
         }
         
         super.init(size: size)
+        
+        if preview {
+            previewMode = true
+        }
         
         anchorPoint = CGPoint(x: 0.5, y: 0.5)
         
@@ -91,24 +100,88 @@ class GeneralScene: SKScene {
             }
         }
         
+        setColors(scheme: 0)
+        
         //self.addChild(addIndicator)
         
         //playBGM()
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        
+        let touch = touches.first!
+        touchBeginPos = touch.location(in: self)
+        let touchedNode = self.atPoint(touch.location(in: self))
+        if let name = touchedNode.name {
+            if name == "Dice In Rect" || name.contains("Die"){
+                invalidMove()
+            }
+            if name == "Stock Box" || name.contains("Stock"){
+                let y = touch.location(in: self).y
+                if (y > 0 && data.activePlayer == 2) || (y < 0 && data.activePlayer == 1) {
+                    onSquareTouch(at: 0, side: data.activePlayer, touch: touch)
+                } else {
+                    invalidMove()
+                }
+            }
+        }
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        
+        if let beginPos = touchBeginPos{
+            if activeSquare != nil {
+                let rank = activeSquare!.0
+                let side = activeSquare!.1
+                let touch = touches.first!
+                let touchPos = touch.location(in: self)
+                let distx = touchPos.x - beginPos.x
+                let disty = touchPos.y - beginPos.y
+                if let sprite = data.tokenAt(at: rank, side: side)?.sprite {
+                    let coord = coordForTile(at: rank, side: side)
+                    sprite.position = CGPoint(x: coord.x + distx, y: coord.y + disty)
+                }
+                if (Float(distx) ^^ 2 + Float(disty) ^^ 2) > 600 {
+                    var dir = ""
+                    if distx > disty {
+                        // Down and right
+                        if distx > -disty {
+                            dir = "right"
+                        } else {
+                            dir = "down"
+                        }
+                    } else {
+                        // Up and left
+                        if -distx > disty {
+                            dir = "left"
+                        } else {
+                            dir = "up"
+                        }
+                    }
+                    onSquareSwipe(at: rank, side: side, dir: dir)
+                    touchBeginPos = nil
+                    activeSquare = nil
+                }
+            } else {
+                // Do nothing
+            }
+        }
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        
+        if activeSquare != nil {
+            if let token = data.tokenAt(at: activeSquare!.0, side: activeSquare!.1) {
+                token.sprite!.position = coordForTile(at: activeSquare!.0, side: activeSquare!.1)
+            }
+            activeSquare = nil
+        }
+        touchBeginPos = nil
+        activeSquare = nil
     }
     
     func onSquareTouch(at rank: Int, side: Int, touch: UITouch) {
+        
+    }
+    
+    func onSquareSwipe(at rank: Int, side: Int, dir: String) {
         
     }
     
@@ -116,6 +189,7 @@ class GeneralScene: SKScene {
         let sprite = SKSpriteNode(texture: rosetta)
         //let sprite = SKSpriteNode(imageNamed: "Stock Tkn P1")
         let arrow = SKSpriteNode(texture: boost)
+        arrow.blendMode = .multiply
         if rank == 4 {
             if side == 1 {
                 arrow.zRotation = .pi
@@ -135,7 +209,7 @@ class GeneralScene: SKScene {
             arrow.zRotation = .pi/2
             sprite.name = "Center Rosette"
         } else {
-            arrow.texture = SKTexture(imageNamed: "boostP\(side)")
+            //arrow.texture = SKTexture(imageNamed: "boostP\(side)")
         }
         self.addChild(sprite)
         self.addChild(arrow)
@@ -183,6 +257,13 @@ class GeneralScene: SKScene {
                 x = 16-rank // In final stretch
             }
         }
+        if previewMode {
+            if data.activePlayer == 1 {
+                return CGPoint(x: (CGFloat(x)+1/2)*horzShift, y: (CGFloat(y) - 0.10)*vertShift)
+            } else {
+                return CGPoint(x: (CGFloat(x)+1/2)*horzShift, y: (CGFloat(y) + 0.10)*vertShift)
+            }
+        }
         return CGPoint(x: (CGFloat(x)+1/2)*horzShift, y: CGFloat(y)*vertShift)
     }
     
@@ -215,12 +296,37 @@ class GeneralScene: SKScene {
     
     func posForDie(side: Int) -> CGPoint {
         var y = 2*vertShift + vertGap/4
+        if previewMode {
+            if data.activePlayer == 1 {
+                y += vertGap*1/3
+            } else {
+                y += vertGap*1/3
+            }
+        }
         if side == 1 {
             y *= -1
         } else {
             y *= 1
         }
         return CGPoint(x: -2*horzShift, y: y)
+    }
+    
+    func addToken(_ token: Token) {
+        //token.sprite = SKSpriteNode(imageNamed: token.spriteName)
+        token.sprite = SKSpriteNode(imageNamed: "token P\(token.player)")
+        let overlay = SKSpriteNode(imageNamed: token.overlayName)
+        overlay.blendMode = .multiply
+        overlay.zPosition = 12
+        if token.player == 2 {
+            overlay.zRotation = .pi
+        }
+        token.sprite!.addChild(overlay)
+        token.sprite!.setScale(1/2 * TileSize!/oldIdealTileSize)
+        //token.sprite!.fillColor = Colour
+        let coord = self.coordForTile(at: token.position, side: token.player)
+        token.sprite!.position = coord
+        token.sprite!.zPosition = 11
+        self.addChild(token.sprite!)
     }
     
     func addTile(at rank: Int, side: Int, bigTile: Bool = false, withButton: Bool = true) {
@@ -284,12 +390,13 @@ class GeneralScene: SKScene {
     
     func addStockCounter(player: Int, below rank: Int = 1) {
         let SBSize = (TileSize!*1, TileSize!*1)
-        let stockBoxIn = SKSpriteNode(color: PStartColour[player-1], size: CGSize(width: SBSize.0 - 2, height: SBSize.1 - 2))
+        let stockBoxIn = SKSpriteNode(color: PTileColour[player-1], size: CGSize(width: SBSize.0 - 2, height: SBSize.1 - 2))
         let stockBox = SKSpriteNode(color: StrokeColour, size: CGSize(width: SBSize.0 + 1, height: SBSize.1 + 1))
         //stockBox.alpha = TileAlpha
         stockBox.addChild(stockBoxIn)
         stockBoxIn.zPosition = 10
         stockBoxIn.name = "Stock Box"
+        stockBoxIn.blendMode = .screen
         stockBox.zPosition = -9
         let abovePos = coordForTile(at: rank, side: player)
         //stockBox.position = CGPoint(x: -0.5*TileSize!, y: (2*TileSize! + vertGap)*CGFloat(player*2-3))
@@ -307,6 +414,9 @@ class GeneralScene: SKScene {
         case 1: stockBoxes.0 = stockBox
         case 2: stockBoxes.1 = stockBox
         default: ()
+        }
+        if previewMode {
+            stockBox.alpha = 0
         }
     }
     
@@ -330,6 +440,28 @@ class GeneralScene: SKScene {
         goals.append(goal)
     }
     
+    func setColors(scheme: Int) {
+        switch scheme {
+        case 0:
+            PColour = [SKColor(1, 0, 0), SKColor(0, 0.95, 0)] // Main Colours
+            PStartColour = [SKColor(1, 0.93, 0.95), SKColor(0.9, 1, 0.93)] // Colour for the start of the track
+            PGoalColour = [SKColor(0.55, 0.05, 0.05), SKColor(0.05, 0.55, 0.05)] // Colour for the goals
+            PDiceOffColour = [SKColor(0.2, 0, 0), SKColor(0, 0.2, 0)] // Colour for the off dice
+            PDiceColour = [SKColor(0.45, 0.1, 0.1), SKColor(0.1, 0.4, 0.1)] // Colour for the dice box
+            PDiceOnColour = [SKColor(1, 0.1, 0.1), SKColor(0.3, 0.95, 0.3)] // Colour for the on dice
+            PTileColour = [SKColor(0.9, 0.7, 0.5), SKColor(0.7, 0.9, 0.5)] // Tile colours
+        case 1:
+            PColour = [SKColor(0.7, 0.3, 0), SKColor(0.3, 0, 0.7)] // Main Colours
+            PStartColour = [SKColor](repeating: TileColour, count: 2) // Colour for the start of the track
+            PGoalColour = [SKColor(0.55, 0.05, 0.05), SKColor(0.05, 0.55, 0.05)] // Colour for the goals
+            PDiceOffColour = [SKColor(0.2, 0, 0), SKColor(0, 0.2, 0)] // Colour for the off dice
+            PDiceColour = [SKColor(0.45, 0.1, 0.1), SKColor(0.1, 0.4, 0.1)] // Colour for the dice box
+            PDiceOnColour = [SKColor(1, 0.1, 0.1), SKColor(0.3, 0.95, 0.3)] // Colour for the on dice
+            PTileColour = [SKColor](repeating: TileColour, count: 2) // Tile colours
+        default: break
+        }
+    }
+    
     func playBGM() {
         let url = Bundle.main.url(forResource: "Sound/The_Cavalry", withExtension: "mp3")
         do {
@@ -341,5 +473,38 @@ class GeneralScene: SKScene {
         } catch let error as NSError {
             print(error.description)
         }
+    }
+    
+    func addSlider() {
+        slideIndicator = SKSpriteNode(imageNamed: "Slide")
+        sliderPos = stockBoxes.0!.position
+        slideIndicator!.position = sliderPos!
+        slideIndicator!.zPosition = 15
+        slideIndicator!.setScale(7/12 * TileSize!/idealTileSize)
+        self.addChild(slideIndicator!)
+        slideTimer = Timer.scheduledTimer(timeInterval: 2.5, target: self, selector: #selector(slideSlider), userInfo: nil, repeats: true)
+        slideTimer!.fire()
+        slideSlider()
+    }
+    
+    func slideSlider() {
+        slideIndicator!.alpha = 1
+        slideIndicator!.position = sliderPos!
+        var newPos = sliderPos!
+        if data.activePlayer == 1 {
+            newPos.y += TileSize!
+        } else {
+            newPos.y -= TileSize!
+            slideIndicator!.zRotation = -.pi/2
+        }
+        let duration: TimeInterval = 2
+        let moveAnim = SKAction.move(to: newPos, duration: duration)
+        let fadeAnim = SKAction.fadeOut(withDuration: duration * 0.5)
+        fadeAnim.timingMode = SKActionTimingMode.easeOut
+        moveAnim.timingMode = SKActionTimingMode.easeOut
+        let fadeComp = SKAction.sequence([SKAction.wait(forDuration: duration*0.5), fadeAnim])
+        let compAnim = SKAction.group([fadeComp, moveAnim])
+        
+        slideIndicator!.run(compAnim)
     }
 }

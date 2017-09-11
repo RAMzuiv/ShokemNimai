@@ -17,10 +17,9 @@ class TutorialScene: GeneralScene {
     var tknSprite: SKSpriteNode?
     var enemy: SKSpriteNode?
     var dice: SKSpriteNode?
-    var slideIndicator: SKSpriteNode?
+    //var slideIndicator: SKSpriteNode?
     var diceValue = [true, false, false, true]
-    var sliderPos: CGPoint?
-    var timer: Timer?
+    //var sliderPos: CGPoint?
     var splash: SKSpriteNode
     
     required init(coder: NSCoder) {
@@ -28,7 +27,7 @@ class TutorialScene: GeneralScene {
         super.init(coder: coder)
     }
     
-    override init(size: CGSize, data: GameData) {
+    override init(size: CGSize, data: GameData, preview: Bool = false) {
         splash = SKSpriteNode(imageNamed: "Splash")
         
         super.init(size: size, data: data)
@@ -100,15 +99,7 @@ class TutorialScene: GeneralScene {
             self.addChild(box)
             phase = 1
             addBoard()
-            slideIndicator = SKSpriteNode(imageNamed: "Slide")
-            sliderPos = stockBoxes.0!.position
-            slideIndicator!.position = sliderPos!
-            slideIndicator?.zPosition = 15
-            slideIndicator?.setScale(7/12 * TileSize!/idealTileSize)
-            self.addChild(slideIndicator!)
-            timer = Timer.scheduledTimer(timeInterval: 2.5, target: self, selector: #selector(slideSlider), userInfo: nil, repeats: true)
-            timer!.fire()
-            slideSlider()
+            addSlider()
             text.text = "Shokem Nimai is played by 2 rivals facing eye-to-eye"
             text.fontSize = scrSize!.height/20
             subtext.text = "Slide a piece onto the board to begin"
@@ -171,7 +162,7 @@ class TutorialScene: GeneralScene {
             nextSquare = nil
             tknSprite!.alpha = 0
             diceValue = [false, false, false, false]
-            timer!.invalidate()
+            slideTimer!.invalidate()
             updateDice()
             text.text = "That's all there is to it!"
             subtext.text = "So grab a friend, and have fun!"
@@ -291,7 +282,7 @@ class TutorialScene: GeneralScene {
         return CGPoint(x: 0, y: TileSize!/idealTileSize*380)
     }
     
-    func slideSlider() {
+    override func slideSlider() {
         slideIndicator!.alpha = 1
         slideIndicator!.position = sliderPos!
         var newPos = slideIndicator!.position

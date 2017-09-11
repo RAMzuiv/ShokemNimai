@@ -13,6 +13,8 @@ class GameViewController: UIViewController {
     var gameScene: GameScene!
     var data: GameData!
     var skView: SKView!
+    let previewMode = true // Used for creating screenshots
+    let previewPlayer = 1
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,10 +24,20 @@ class GameViewController: UIViewController {
         skView.preferredFramesPerSecond = 60
         
         data = GameData(controller: self)
+        if previewMode {
+            data.activePlayer = previewPlayer
+        }
 
-        gameScene = GameScene(size: skView.bounds.size, data: data)
+        gameScene = GameScene(size: skView.bounds.size, data: data, preview: previewMode)
         data.scene = gameScene
         data.newGame()
+        if previewMode {
+            //let rig1 = [(1, 1), (7, 1), (11, 1), (2, 2), (5, 2), (9, 2)]
+            //let rig2 = [(1, 2), (2, 1), (4, 2), (10, 2), (9, 1), (11, 1)]
+            let rig3 = [(4, 1), (9, 1), (10, 1), (2, 2), (6, 2), (13, 2)]
+            data.rig(tokens: rig3, player: previewPlayer, score: [4, 3])
+            gameScene.presentText(message: "")
+        }
         
         //let tutData = TutorialData(controller: self)
         let tutorialScene = TutorialScene(size: skView.bounds.size, data: data)
@@ -38,7 +50,11 @@ class GameViewController: UIViewController {
         gameScene.scaleMode = .aspectFill
             
         //skView.presentScene(gameScene)
-        skView.presentScene(tutorialScene)
+        if !previewMode {
+            skView.presentScene(tutorialScene)
+        } else {
+            skView.presentScene(gameScene)
+        }
         //print("done!")
     }
     

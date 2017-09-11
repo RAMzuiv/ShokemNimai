@@ -41,6 +41,20 @@ class Token: CustomStringConvertible, Hashable {
         default: return "token P\(player)"
         }
     }
+    
+    var overlayName: String {
+        switch tokenType {
+        case 1: return "overlay circle"
+        case 2: return "overlay star"
+        case 3: return "overlay cross"
+        case 4: return "overlay hex"
+        case 5: return "overlay wave"
+        case 6: return "overlay hacker"
+        case 7: return "overlay octostar"
+        case 8: return "overlay yin"
+        default: return ""
+        }
+    }
 }
 
 func ==(lhs: Token, rhs: Token) -> Bool {

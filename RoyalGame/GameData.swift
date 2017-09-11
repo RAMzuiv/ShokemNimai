@@ -21,8 +21,9 @@ class GameData {
     var tokenFinish = [0, 0] // The number of tokens brought to each player's goal
     var diceState = [false, false, false, false]
     var gameOver = false
-    //var availableTypes = [[TokenType]](repeating: [.general, .peasant, .priest, .dancer, .siege, .knight, .jester], count: 2)
-    var availableTypes = [[Int]](repeating: [1, 2, 3, 4, 5, 6, 7, 8, 9], count: 2)
+    let TypesList = [1, 2, 3, 4, 5, 6, 7, 8]
+    //var availableTypes = [[Int]](repeating: [1, 2, 3, 4, 5, 6, 7, 8], count: 2)
+    var availableTypes: [[Int]]?
     let rosettes = [4, 9, 14]
     var rosetteTimer = 0 // The amount of time that a piece has been on the rosette
     var moveNum = 0 // The number of moves made in the game
@@ -57,7 +58,7 @@ class GameData {
                         createToken(at: jump, player: activePlayer)
                         tokenStock[activePlayer-1] -= 1 // Take the token out of the player's stock
                     case .capture:
-                        availableTypes[2-activePlayer].append(tokenAt(at: pos + jump, side: 2 - activePlayer)!.tokenType)
+                        availableTypes![2-activePlayer].append(tokenAt(at: pos + jump, side: 2 - activePlayer)!.tokenType)
                         removeToken(at: pos + jump, player: activePlayer^3) // Remove a token that belongs to the other player at the new position
                         tokenAt(at: pos, side: side)!.position += jump
                         tokenStock[2-activePlayer] += 1 // Add the token back to the other player's stock
@@ -179,10 +180,12 @@ class GameData {
             }
         } while (!availableTypes[player-1].contains(tokenType))
         */
-        let tokenNum = arc4random_uniform(UInt32(availableTypes[player-1].count))
-        let tokenType = availableTypes[player-1][Int(tokenNum)]
-        availableTypes[player-1].remove(at: Int(tokenNum))
+        let tokenNum = arc4random_uniform(UInt32(availableTypes![player-1].count))
+        let tokenType = availableTypes![player-1][Int(tokenNum)]
+        availableTypes![player-1].remove(at: Int(tokenNum))
         let token = Token(pos: pos, player: player, type: tokenType)
+        //let token = Token(pos: pos, player: player, type: 8)
+        //print(tokenType)
         tokens.append(token)
     }
     
@@ -285,13 +288,13 @@ class GameData {
         }
     }
     
-    func newGame(){
+    func newGame() {
         if tokens != nil {
             for token in tokens {
                 scene.removeToken(token)
             }
         }
-        availableTypes = [[Int]](repeating: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], count: 2)
+        availableTypes = [[Int]](repeating: TypesList, count: 2)
         moveNum = 0
         gameOver = false
         activePlayer = 1
@@ -301,6 +304,15 @@ class GameData {
         tokens = []
         rollDice()
         scanMoves()
+        scene.updateScreen()
+    }
+    
+    func rig(tokens: [(Int, Int)], player: Int, score: [Int]) {
+        for token in tokens {
+            createToken(at: token.0, player: token.1)
+        }
+        tokenFinish = score
+        activePlayer = player
         scene.updateScreen()
     }
     

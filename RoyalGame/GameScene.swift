@@ -17,14 +17,14 @@ class GameScene: GeneralScene {
         fatalError("coder is not used in this app")
     }
     
-    override init(size: CGSize, data: GameData) {
+    override init(size: CGSize, data: GameData, preview: Bool = false) {
         let tSize = size.width/9
         
         // Create the dice sprites
         //dice = SKSpriteNode(color: SKColor.black, size: CGSize(width: dieSize!+1, height: dieSize!+1))
         dice = SKSpriteNode(imageNamed: "P1Dice")
         
-        super.init(size: size, data: data)
+        super.init(size: size, data: data, preview: preview)
         
         // Add the tiles to the board
         for side in [1, 2]{
@@ -79,7 +79,11 @@ class GameScene: GeneralScene {
         //dice.position = CGPoint(x: 3*horzShift, y: -2*vertShift - vertGap)
         dice.position = posForDie(side: 1)
         dice.zPosition = 9
-        dice.setScale(1.2 * tSize/idealTileSize)
+        if !previewMode {
+            dice.setScale(1.2 * tSize/idealTileSize)
+        } else {
+            dice.setScale(1.2 * tSize/idealTileSize)
+        }
         for i in [0,1] {
             for j in [0,1] {
                 let dieNum = j*2+i
@@ -104,61 +108,13 @@ class GameScene: GeneralScene {
             }
         }
         
+        // Add the slide indicator
+        if !previewMode {
+            addSlider()
+            slideIndicator!.zRotation = .pi/2
+        }
+        
         self.addChild(dice)
-    }
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        let touch = touches.first!
-        touchBeginPos = touch.location(in: self)
-        let touchedNode = self.atPoint(touch.location(in: self))
-        if let name = touchedNode.name {
-            if name == "Dice In Rect" || name.contains("Die"){
-                invalidMove()
-            }
-            if name == "Stock Box" || name.contains("Stock"){
-                let y = touch.location(in: self).y
-                if (y > 0 && data.activePlayer == 2) || (y < 0 && data.activePlayer == 1) {
-                    onSquareTouch(at: 0, side: data.activePlayer, touch: touch)
-                } else {
-                    invalidMove()
-                }
-            }
-        }
-    }
-    
-    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if let beginPos = touchBeginPos{
-            if activeSquare != nil {
-                let rank = activeSquare!.0
-                let side = activeSquare!.1
-                let touch = touches.first!
-                let touchPos = touch.location(in: self)
-                let distx = touchPos.x - beginPos.x
-                let disty = touchPos.y - beginPos.y
-                if let sprite = data.tokenAt(at: rank, side: side)?.sprite {
-                    let coord = coordForTile(at: rank, side: side)
-                    sprite.position = CGPoint(x: coord.x + distx, y: coord.y + disty)
-                }
-                if (Float(distx) ^^ 2 + Float(disty) ^^ 2) > 600 {
-                    self.data.executeMove(at: rank, side: side)
-                    touchBeginPos = nil
-                    activeSquare = nil
-                }
-            } else {
-                // Do nothing
-            }
-        }
-    }
-    
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if activeSquare != nil {
-            if let token = data.tokenAt(at: activeSquare!.0, side: activeSquare!.1) {
-                token.sprite!.position = coordForTile(at: activeSquare!.0, side: activeSquare!.1)
-            }
-            activeSquare = nil
-        }
-        touchBeginPos = nil
-        activeSquare = nil
     }
     
     override func onSquareTouch(at rank: Int, side: Int, touch: UITouch) {
@@ -170,6 +126,33 @@ class GameScene: GeneralScene {
                 activeSquare = (rank, side)
             }
         }
+    }
+    
+    override func onSquareSwipe(at rank: Int, side: Int, dir: String) {
+        if swipeDirForSquare(at: rank, side: side).contains(dir) {
+            self.data.executeMove(at: rank, side: side)
+        } else {
+            invalidMove()
+            if let token = data.tokenAt(at: activeSquare!.0, side: activeSquare!.1) {
+                token.sprite!.position = coordForTile(at: activeSquare!.0, side: activeSquare!.1)
+            }
+            activeSquare = nil
+        }
+    }
+    
+    func swipeDirForSquare(at rank: Int, side: Int) -> [String] {
+        if rank == 0 || rank == 4 {
+            if side == 1 {
+                return ["up", "left", "right"]
+            } else if side == 2 {
+                return ["down", "left", "right"]
+            }
+        } else if (rank >= 1 && rank <= 3) || (rank == 13 || rank == 14) {
+            return ["left", "up", "down"]
+        } else if rank >= 5 && rank < 12 {
+            return ["right", "up", "down"]
+        }
+        return ["left", "right", "up", "down"]
     }
     
     func setDieColor(die dieNum: Int, state: Int) { // State 0 is off, 1 is on during rolling, 2 is on normally
@@ -188,6 +171,17 @@ class GameScene: GeneralScene {
         }
         die.fillColor = colour
         die.strokeColor = colour
+    }
+    
+    func presentText(message: String) {
+        let text = SKLabelNode(fontNamed: "AppleSDGothicNeo-Bold")
+        text.fontSize=size.height/12
+        text.verticalAlignmentMode = .center
+        text.position = CGPoint(x: 0, y: size.height*17/48)
+        text.text = message
+        text.fontColor = SKColor(1, 1, 0)
+        text.zPosition = 10
+        self.addChild(text)
     }
     
     override func updateScreen() {
@@ -234,6 +228,17 @@ class GameScene: GeneralScene {
             rosette.texture = SKTexture(imageNamed: "RoseT\(rTimer)")
         }
         
+        // Update the slide indicator, if needed
+        if data.moveNum == 0 {
+            if data.activePlayer == 2 {
+                sliderPos = stockBoxes.1?.position
+                //slideIndicator?.zRotation = -.pi/2
+            }
+        } else {
+            slideTimer?.invalidate()
+            slideIndicator?.alpha = 0
+        }
+        
         // Update the tokens
         for token in self.data.tokens {
             if let sprite = token.sprite {
@@ -245,6 +250,7 @@ class GameScene: GeneralScene {
                 //let Colour = PColour[token.player-1]
                 //token.sprite = SKShapeNode(rectOf: CGSize(width: self.TileSize!*13/16, height: self.TileSize!*13/16), cornerRadius: 10)
                 //token.sprite = SKSpriteNode(imageNamed: "token P\(token.player)")
+                /*
                 token.sprite = SKSpriteNode(imageNamed: token.spriteName)
                 token.sprite!.setScale(1/2 * TileSize!/oldIdealTileSize)
                 //token.sprite!.fillColor = Colour
@@ -252,6 +258,8 @@ class GameScene: GeneralScene {
                 token.sprite!.position = coord
                 token.sprite!.zPosition = 11
                 self.addChild(token.sprite!)
+                */
+                addToken(token)
             }
         }
         

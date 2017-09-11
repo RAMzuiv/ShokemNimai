@@ -22,7 +22,7 @@ class BGEmitter {
         fatalError()
     }
     
-    init(size: CGSize) {
+    init(size: CGSize, darkMode: Bool = false) {
         scrSize = size
         angV = maxAngV*(randFloat()-0.5)*2
         let thetaVel = .pi*2*randFloat() // The initial angle of the velocity
@@ -34,6 +34,9 @@ class BGEmitter {
             blendRects[i].blendMode = .screen
             blendRects[i].zPosition = 0
             blendRects[i].alpha = 0.45
+            if darkMode {
+                blendRects[i].alpha = 0.3
+            }
         }
         //let xpos = scrSize.width*CGFloat(arc4random())/CGFloat(UINT32_MAX) - scrSize.width/2
         //let ypos = scrSize.height*CGFloat(arc4random())/CGFloat(UINT32_MAX) - scrSize.height/2
