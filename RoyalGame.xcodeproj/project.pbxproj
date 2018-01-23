@@ -25,6 +25,7 @@
 		76932D331F2BF3590083D427 /* BGEmitter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76932D321F2BF3590083D427 /* BGEmitter.swift */; };
 		76932DAF1F3C0B450083D427 /* Intro.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 76932DAE1F3C0B450083D427 /* Intro.storyboard */; };
 		76A841B91ECB979800D0B591 /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76A841B81ECB979800D0B591 /* Token.swift */; };
+		76BB08721F8C04090049AEE0 /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76BB08711F8C04090049AEE0 /* Button.swift */; };
 		76D220C91ED41B2F00B28BAF /* Move.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76D220C81ED41B2F00B28BAF /* Move.swift */; };
 		76D220D01ED639AB00B28BAF /* Sprites.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 76D220CF1ED639AB00B28BAF /* Sprites.xcassets */; };
 		76E280BD1EDD0550003CA5F0 /* WinScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76E280BC1EDD0550003CA5F0 /* WinScene.swift */; };
@@ -72,6 +73,7 @@
 		76932D321F2BF3590083D427 /* BGEmitter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BGEmitter.swift; sourceTree = "<group>"; };
 		76932DAE1F3C0B450083D427 /* Intro.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Intro.storyboard; sourceTree = "<group>"; };
 		76A841B81ECB979800D0B591 /* Token.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Token.swift; sourceTree = "<group>"; };
+		76BB08711F8C04090049AEE0 /* Button.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
 		76D220C81ED41B2F00B28BAF /* Move.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Move.swift; sourceTree = "<group>"; };
 		76D220CF1ED639AB00B28BAF /* Sprites.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Sprites.xcassets; sourceTree = "<group>"; };
 		76E280BC1EDD0550003CA5F0 /* WinScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WinScene.swift; sourceTree = "<group>"; };
@@ -131,6 +133,7 @@
 				763D28DB1F1EE16E0004D629 /* GeneralScene.swift */,
 				767D52BF1EC7E4AA0029A49A /* GameScene.swift */,
 				763D28D91F1EDDE00004D629 /* TutorialScene.swift */,
+				76BB08711F8C04090049AEE0 /* Button.swift */,
 				76E280BC1EDD0550003CA5F0 /* WinScene.swift */,
 				76932D321F2BF3590083D427 /* BGEmitter.swift */,
 				7631BF4F1EE1017E00CEA2D4 /* Extensions.swift */,
@@ -311,6 +314,7 @@
 				767D52C01EC7E4AA0029A49A /* GameScene.swift in Sources */,
 				763D28DA1F1EDDE00004D629 /* TutorialScene.swift in Sources */,
 				766226B41ECE24C100B32162 /* GameData.swift in Sources */,
+				76BB08721F8C04090049AEE0 /* Button.swift in Sources */,
 				767D52C21EC7E4AA0029A49A /* GameViewController.swift in Sources */,
 				763D28DC1F1EE16E0004D629 /* GeneralScene.swift in Sources */,
 				76E280BD1EDD0550003CA5F0 /* WinScene.swift in Sources */,

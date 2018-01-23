@@ -507,4 +507,8 @@ class GeneralScene: SKScene {
         
         slideIndicator!.run(compAnim)
     }
+    
+    func newGame() {
+        data.Controller.newGame()
+    }
 }

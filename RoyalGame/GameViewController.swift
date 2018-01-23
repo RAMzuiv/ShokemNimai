@@ -13,7 +13,7 @@ class GameViewController: UIViewController {
     var gameScene: GameScene!
     var data: GameData!
     var skView: SKView!
-    let previewMode = true // Used for creating screenshots
+    let previewMode = false // Used for creating screenshots
     let previewPlayer = 1
 
     override func viewDidLoad() {

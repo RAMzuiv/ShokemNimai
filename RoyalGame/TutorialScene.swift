@@ -10,8 +10,10 @@ import SpriteKit
 import AVFoundation
 
 class TutorialScene: GeneralScene {
-    var text = SKLabelNode(fontNamed: "AppleSDGothicNeo-Bold")
-    var subtext = SKLabelNode(fontNamed: "AppleSDGothicNeo-Bold")
+    //var text = SKLabelNode(fontNamed: "AppleSDGothicNeo-Bold")
+    //var subtext = SKLabelNode(fontNamed: "AppleSDGothicNeo-Bold")
+    var text = SKLabelNode(fontNamed: "Futura")
+    var subtext = SKLabelNode(fontNamed: "Futura")
     var phase = 0
     var nextSquare: Int?
     var tknSprite: SKSpriteNode?
@@ -21,6 +23,9 @@ class TutorialScene: GeneralScene {
     var diceValue = [true, false, false, true]
     //var sliderPos: CGPoint?
     var splash: SKSpriteNode
+    var playButton: Button?
+    var tutButton: Button?
+    var aboutButton: Button?
     
     required init(coder: NSCoder) {
         splash = SKSpriteNode()
@@ -31,6 +36,8 @@ class TutorialScene: GeneralScene {
         splash = SKSpriteNode(imageNamed: "Splash")
         
         super.init(size: size, data: data)
+        splash.position = CGPoint(x: 0, y: size.height*(0.07))
+        splash.setScale(TileSize!/idealTileSize)
         text.fontSize=size.height/8
         text.verticalAlignmentMode = .center
         text.position = CGPoint(x: 0, y: size.height*5/24)
@@ -47,6 +54,21 @@ class TutorialScene: GeneralScene {
         self.addChild(text)
         self.addChild(subtext)
         self.addChild(splash)
+        
+        // Add buttons
+        let btnSize: CGFloat = 170.0 * (TileSize!/idealTileSize)
+        playButton = Button(scene: self, size: CGSize(width: btnSize, height: btnSize), pos: CGPoint(x: btnSize * (0), y: size.height*(-0.32)), label: "Play", action: "play")
+        playButton!.zPosition = 30
+        playButton!.isUserInteractionEnabled = true
+        tutButton = Button(scene: self, size: CGSize(width: btnSize, height: btnSize), pos: CGPoint(x: btnSize * (-1.5), y: size.height*(-0.32)), label: "Tutorial", action: "tutorial")
+        tutButton!.zPosition = 30
+        tutButton!.isUserInteractionEnabled = true
+        aboutButton = Button(scene: self, size: CGSize(width: btnSize, height: btnSize), pos: CGPoint(x: btnSize * (1.5), y: size.height*(-0.32)), label: "About", action: "about")
+        aboutButton!.zPosition = 30
+        aboutButton!.isUserInteractionEnabled = true
+        self.addChild(playButton!)
+        self.addChild(tutButton!)
+        self.addChild(aboutButton!)
     }
     
     func addBoard() {
@@ -67,16 +89,6 @@ class TutorialScene: GeneralScene {
         
         // Add the rosettes
         for rosette in [9] {
-            /*
-             if 13 <= rosette || rosette <= 4 {
-             let side = 1
-             {
-             addRosette(rank: rosette, side: side)
-             }
-             } else {
-             addRosette(rank: rosette, side: 0)
-             }
-             */
             addRosette(rank: rosette, side: 0)
         }
         
@@ -92,12 +104,14 @@ class TutorialScene: GeneralScene {
     func nextphase() {
         switch phase {
         case 0:
+            hideUI()
             let box = SKSpriteNode(color: SKColor.white, size: CGSize(width: scrSize!.width*0.95, height: scrSize!.height*0.2))
             box.alpha = 0.7
             box.position = CGPoint(x: 0, y: scrSize!.height*0.17)
             box.zPosition = 1
             self.addChild(box)
             phase = 1
+            // Add the board and the slide indicator
             addBoard()
             addSlider()
             text.text = "Shokem Nimai is played by 2 rivals facing eye-to-eye"
@@ -106,7 +120,6 @@ class TutorialScene: GeneralScene {
             subtext.fontSize = scrSize!.height/24
             subtext.position.y = scrSize!.height*3/24
             nextSquare = 0
-            splash.alpha = 0
         case 1:
             phase = 2
             nextSquare = 6
@@ -174,6 +187,11 @@ class TutorialScene: GeneralScene {
         }
     }
     
+    func aboutScreen() {
+        hideUI()
+        
+    }
+    
     override func onSquareTouch(at rank: Int, side: Int, touch: UITouch) {
         if nextSquare != nil && nextSquare! == rank {
             touchBeginPos = touch.location(in: self)
@@ -183,12 +201,15 @@ class TutorialScene: GeneralScene {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         if phase == 0 {
-            nextphase()
+            // If you are in the opening screen, go to the next screen upon touch
+            //nextphase()
         } else if phase == 5 {
-            data.Controller.newGame()
+            // If you are on the final phase of the tutorial, begin the game
+            newGame()
         } else {
+            // If the player touches the stock counter, start a drag motion.
             let touch = touches.first!
-            touchBeginPos = touch.location(in: self)
+            //touchBeginPos = touch.location(in: self)
             let touchedNode = self.atPoint(touch.location(in: self))
             if let name = touchedNode.name {
                 if name == "Stock Box" || name.contains("Stock"){
@@ -296,6 +317,13 @@ class TutorialScene: GeneralScene {
         let compAnim = SKAction.group([fadeComp, moveAnim])
         
         slideIndicator!.run(compAnim)
+    }
+    
+    func hideUI() {
+        splash.alpha = 0
+        playButton!.alpha = 0
+        tutButton!.alpha = 0
+        aboutButton!.alpha = 0
     }
 }
 
